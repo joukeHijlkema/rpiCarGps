@@ -16,10 +16,18 @@ db = dataBase("Jouke","!Jouke","localhost","busGps")
 db.start()
 while db.init:
     time.sleep(0.1)
-
-db.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (1,'Day',%s)"%db.dayDist(0))
-db.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (2,'Trip',%s)"%db.tripDist())
-db.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (3,'Total',%s)"%db.totDist())
+D = db.dayDist(0)
+db.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (1,'Day',%s)"%D)
+print("Day : %f"%D)
+D = db.tripDist()
+db.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (2,'Trip',%s)"%D)
+print("Trip : %f"%D)
+D = db.tankDist()
+db.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (4,'Tank',%s)"%D)
+print("Tank : %f"%D)
+D = db.totDist()
+db.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (3,'Total',%s)"%D)
+print("Total : %f"%D)
 
 db.Quit()
 

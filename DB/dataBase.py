@@ -50,13 +50,16 @@ class dataBase(threading.Thread):
             print("connection OK")
             self.dstDay  = self.dayDist(0)
             #self.dstDay = self.GetOne("SELECT Value FROM Memory WHERE Id=1")
-            print("day distance OK")
+            print("day distance OK: %f"%self.dstDay)
             #self.dstTrip = self.tripDist()
             self.dstTrip = self.GetOne("SELECT Value FROM Memory WHERE Id=2")
-            print("trip distance OK")
+            print("trip distance OK: %f"%self.dstTrip)
+            #self.dstTank = self.tankDist()
+            self.dstTank = self.GetOne("SELECT Value FROM Memory WHERE Id=4")
+            print("tank distance OK: %f"%self.dstTank)
             #self.dstTot  = self.totDist()
             self.dstTot = self.GetOne("SELECT Value FROM Memory WHERE Id=3")
-            print("total distance OK")
+            print("total distance OK: %f"%self.dstTot)
             print("all distances calculated")
             self.init=False
         return "running"
@@ -154,6 +157,8 @@ class dataBase(threading.Thread):
     ## date   : 02-29-2017 08:29:11
     ## --------------------------------------------------------------
     def addPoint (self,data,Force=False):
+        if data["lon"] == 0.0 and data["lat"] == 0:
+            return
         lastPoint  = self.Get("SELECT Lat,Lon FROM Gps ORDER BY id DESC LIMIT 1")
         d          = 10.0
         if len(lastPoint)==0 or Force:
@@ -168,10 +173,12 @@ class dataBase(threading.Thread):
             self.dstDay +=d
             self.dstTrip+=d
             self.dstTot +=d
+            self.dstTank +=d
             
             self.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (1,'Day',%s)"%self.dstDay)
             self.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (2,'Trip',%s)"%self.dstTrip)
             self.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (3,'Total',%s)"%self.dstTot)
+            self.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (4,'Total',%s)"%self.dstTank)
 
             return True
         return False
@@ -184,18 +191,22 @@ class dataBase(threading.Thread):
     ## --------------------------------------------------------------
     def Distance (self,lat1,lon1,lat2,lon2):
         #print("%s,%s->%s,%s"%(lat1,lon1,lat2,lon2))
-        R = 6371e3
-        f1 = math.radians(lat1)
-        f2 = math.radians(lat2)
-        d1 = math.radians(lon1)
-        d2 = math.radians(lon2)
-
-        df = f2-f1
-        dd = d2-d1
+        try:
+            R = 6371e3
+            f1 = math.radians(lat1)
+            f2 = math.radians(lat2)
+            d1 = math.radians(lon1)
+            d2 = math.radians(lon2)
+            
+            df = f2-f1
+            dd = d2-d1
         
-        a = math.pow(math.sin(df/2),2)+math.cos(f1)*math.cos(f2)*math.pow(math.sin(dd/2),2)
-        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
-        return float(R * c)
+            a = math.pow(math.sin(df/2),2)+math.cos(f1)*math.cos(f2)*math.pow(math.sin(dd/2),2)
+            c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+            return float(R * c)
+        except:
+            return 0.0
+
     def NDistance(self,n1,n2):
         return self.Distance(n1[0],n1[1],n2[0],n2[1])
     def SDistance(self,Nodes):
@@ -229,7 +240,7 @@ class dataBase(threading.Thread):
     ## date   : 02-33-2017 13:33:26
     ## --------------------------------------------------------------
     def totDist (self,*positional_parameters, **keyword_parameters):
-        return self.SDistance(self.Get("SELECT Lat,Lon FROM `Gps`"))
+        return self.SDistance(self.Get("SELECT Lat,Lon FROM `Gps` ORDER BY Id DESC"))
     ## --------------------------------------------------------------
     ## Description : calculate trip distance
     ## NOTE : 
@@ -238,7 +249,19 @@ class dataBase(threading.Thread):
     ## date   : 02-33-2017 13:33:26
     ## --------------------------------------------------------------
     def tripDist (self):
-        return self.SDistance(self.Get("SELECT Gps.Lat,Gps.Lon FROM Gps, Temp  WHERE DATE(Gps.Time) >= DATE(Temp.tripStart)"))                
+        return self.SDistance(self.Get("SELECT Gps.Lat,Gps.Lon FROM Gps, Temp  WHERE DATE(Gps.Time) >= DATE(Temp.tripStart) AND Temp.ID = 1"))                
+    ## --------------------------------------------------------------
+    ## Description : calculate tank distance
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 02-33-2017 13:33:26
+    ## --------------------------------------------------------------
+    def tankDist (self):
+        start = self.GetOne("SELECT tripStart FROM Temp WHERE ID=2")
+        print("SELECT Lat,Lon FROM Gps WHERE Time >= '%s'"%start)
+        return self.SDistance(self.Get("SELECT Lat,Lon FROM Gps WHERE Time >= '%s'"%start))
+                                            
     ## --------------------------------------------------------------
     ## Description : reset the trip
     ## NOTE : 
@@ -250,3 +273,16 @@ class dataBase(threading.Thread):
         print("DB : reset trip")
         self.Exec("UPDATE Memory SET Value=0 WHERE Id=2")
         self.dstTrip = self.GetOne("SELECT Value FROM Memory WHERE Id=2")
+
+    ## --------------------------------------------------------------
+    ## Description : reset the tank
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 16-04-2017 13:04:59
+    ## --------------------------------------------------------------
+    def resetTank (self):
+        print("DB : reset tank")
+        self.Exec("UPDATE Memory SET Value=0 WHERE Id=4")
+        self.dstTank = self.GetOne("SELECT Value FROM Memory WHERE Id=4")
+        

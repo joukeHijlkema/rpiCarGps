@@ -71,7 +71,9 @@ if __name__ == "__main__":
     window = mainWindow()
     window.show()
 
-    Gps = myGps.myGps()
+    time.sleep(1)
+
+    ps = myGps.myGps()
     Gps.newData.connect(window.onGpsDataReady)
     Gps.start()
 

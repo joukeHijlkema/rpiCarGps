@@ -15,6 +15,7 @@ import argparse
 import arrow
 from fastkml import kml
 from shapely.geometry import Point
+from geopy.distance import vincenty as dist
 
 parser = argparse.ArgumentParser(description='Extract a journey from th rpiGps')
 
@@ -30,6 +31,7 @@ while db.init:
     time.sleep(0.1)
 
 data = db.Get("SELECT Id,Lat,Lon,Time from Gps WHERE Time BETWEEN '{}' AND '{}' ORDER BY id".format(args.start,args.stop))
+print("SELECT Id,Lat,Lon,Time from Gps WHERE Time BETWEEN '{}' AND '{}' ORDER BY id".format(args.start,args.stop))
 print("found %s items"%len(data))
 
 # Create the root KML object
@@ -59,10 +61,24 @@ for d in data:
         t1 = t2
     lat=d[1]
     lon=d[2]
+lat=data[0][1]
+lon=data[0][2]
+id = 0
+for d in data:
+    # print(dist((d[2],d[1]),(lon,lat)).kilometers)
+    if dist((d[2],d[1]),(lon,lat)).kilometers>10:
+        p = kml.Placemark(ns, "%s"%id,"km_%s"%id, "borne numéro %s"%id)
+        p.geometry  = Point(lon,lat)
+        docRoute.append(p)
+        lat=d[1]
+        lon=d[2]
 
-print(root.to_string(prettyprint=True))
 fid = open("{}.kml".format(args.title),"w")
 fid.write(rootNights.to_string(prettyprint=True))
+fid.close()
+
+fid = open("{}_route.kml".format(args.title),"w")
+fid.write(rootRoute.to_string(prettyprint=True))
 fid.close()
 
 

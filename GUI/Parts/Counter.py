@@ -19,8 +19,7 @@ class Counter(Gtk.Box):
         super(Counter, self).__init__()
         # print(kw)
 
-        self.set_hexpand(True)
-        self.set_valign(Gtk.Align.END)
+        self.set_valign(Gtk.Align.START)
 
         name = kw["name"] if "name" in kw else "noName"
         self.set_name(name)
@@ -36,7 +35,8 @@ class Counter(Gtk.Box):
             title = kw["title"]
             self.Title  = Gtk.Label.new(title)
             self.Title.set_name("Title")
-            self.Title.set_halign(Gtk.Align.START)
+            # self.Title.set_halign(Gtk.Align.START)
+            self.Title.set_alignment(0.0,0.5)
             self.add(self.Title)
             self.Title.set_width_chars(8)
             self.Title.set_max_width_chars(8)
@@ -44,18 +44,15 @@ class Counter(Gtk.Box):
         
         self.Value  = Gtk.Label.new("---")
         self.Value.set_name("Value")
-        self.Value.set_xalign(0.0)
-        self.Value.set_hexpand(True)
-        self.Value.set_justify(Gtk.Justification.LEFT)
+        self.Value.set_alignment(0.0,0.5)
         
         self.Units  = Gtk.Label.new("--")
         self.Units.set_name("Units")
-
-        self.Units.set_halign(Gtk.Align.START)
+        self.Units.set_alignment(0.0,0.5)
 
         self.add(self.Value)
         self.add(self.Units)
-        
+
         self.set_size_request(w,h)
 
         self.updateSignal = signal(name)

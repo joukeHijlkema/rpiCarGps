@@ -8,7 +8,7 @@
 #   - Initial Version 1.0
 #  =================================================
 import gi
-# gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GObject, Gdk
 
 import sys
@@ -19,7 +19,7 @@ import dbus
 import configparser
 
 config = configparser.ConfigParser()
-config.read("rpiCarGps.cfg")
+config.read("/home/pi/Projects/rpiCarGps/rpiCarGps.cfg")
 
 for i in eval(config.get("Items","Active")):
     exec("from .Parts.{item} import {item}".format(item=i))
@@ -31,9 +31,10 @@ class mainWindow(Gtk.Window):
     def __init__(self):
         "docstring"
         super(mainWindow, self).__init__()
+        print("gtk version = %s.%s.%s"%(Gtk.get_major_version(),Gtk.get_minor_version(),Gtk.get_micro_version()))
         
         self.builder = Gtk.Builder()
-        self.builder.add_from_file("GUI/Gui.glade")
+        self.builder.add_from_file("/home/pi/Projects/rpiCarGps/GUI/Gui.glade")
         
         handlers = {
             "onDeleteWindow": self.Quit,
@@ -72,7 +73,7 @@ class mainWindow(Gtk.Window):
             ))
             butCont.add(self.items[i])
 
-        self.setStyle("GUI/Styles/%s/dayStyles.css"%config.get("Items","Config"))
+        self.setStyle("/home/pi/Projects/rpiCarGps/GUI/Styles/%s/dayStyles.css"%config.get("Items","Config"))
         
         window.show_all()
         myNavit.start()

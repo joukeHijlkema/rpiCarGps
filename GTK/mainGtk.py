@@ -13,7 +13,8 @@ from GPS.gtkNavit import gtkNavit
 from speedMeter import speedMeter
 from dayDist import dayDist
 from tripDist import tripDist
-from totDist import totDist
+from tripDist import tripDist
+from tankDist import tankDist
 from Altitude import Altitude
 from Rate import Rate
 from Time import Time
@@ -35,6 +36,7 @@ class mainGtk(Gtk.Window):
         self.mySpeedMeter  = speedMeter(self,320,100,"speedMeter","")
         self.myDayDist     = dayDist(self,320,20,"dayDist","Jour:")
         self.mytripDist    = tripDist(self,320,20,"tripDist","Trip:")
+        self.mytankDist    = tankDist(self,320,20,"tankDist","Tank:")
         self.myTotDist     = totDist(self,320,20,"totDist","Total:")
         self.myAlt         = Altitude(self,320,20,"alt","Alt:")
         self.myRate        = Rate(self,320,20,"rate","Rate:")
@@ -50,11 +52,12 @@ class mainGtk(Gtk.Window):
         grid.attach(self.mySpeedMeter,0,0,1,1)
         grid.attach(self.myDayDist,0,1,1,1)
         grid.attach(self.mytripDist,0,2,1,1)
-        grid.attach(self.myTotDist,0,3,1,1)
-        grid.attach(self.myAlt,0,4,1,1)
-        grid.attach(self.myRate,0,5,1,1)
-        grid.attach(self.myTime,0,6,1,1)
-        grid.attach(self.quitButton,0,7,1,1)
+        grid.attach(self.mytankDist,0,3,1,1)
+        grid.attach(self.myTotDist,0,4,1,1)
+        grid.attach(self.myAlt,0,5,1,1)
+        grid.attach(self.myRate,0,6,1,1)
+        grid.attach(self.myTime,0,7,1,1)
+        grid.attach(self.quitButton,0,8,1,1)
         grid.attach(self.myNavit,1,0,1,8)
 
         self.myNavit.start()
