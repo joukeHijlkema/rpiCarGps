@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dashboard</class>
+ <widget class="QMainWindow" name="Dashboard">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dashboard</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLCDNumber" name="speedCounter">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>171</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="digitCount">
+     <number>3</number>
+    </property>
+    <property name="segmentStyle">
+     <enum>QLCDNumber::Flat</enum>
+    </property>
+    <property name="value" stdset="0">
+     <double>0.000000000000000</double>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>10</y>
+      <width>61</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>km/h</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::RichText</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="testButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>530</y>
+      <width>79</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Test</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="quitButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>500</y>
+      <width>79</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>quit</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>116</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>90</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>distance today</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLCDNumber" name="distanceTodayCounter">
+       <property name="font">
+        <font>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="smallDecimalPoint">
+        <bool>false</bool>
+       </property>
+       <property name="numDigits">
+        <number>7</number>
+       </property>
+       <property name="segmentStyle">
+        <enum>QLCDNumber::Flat</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>160</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>90</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>distance total</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLCDNumber" name="distanceTotalCounter">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="numDigits">
+        <number>7</number>
+       </property>
+       <property name="segmentStyle">
+        <enum>QLCDNumber::Flat</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>19</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>quitButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Dashboard</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>49</x>
+     <y>530</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
