@@ -19,10 +19,19 @@ class myGps(QtCore.QThread):
         # Listen on port 2947 (gpsd) of localhost
         self.session = gps.gps("localhost", "2947")
         self.session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
- 
+
+    ## --------------------------------------------------------------
+    ## Description :run
+    ## NOTE :
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 17-52-2017 18:52:05
+    ## --------------------------------------------------------------
+    def run (self):
         while True:
+            print "running ..."
             try:
-                report = session.next()
+                report = self.session.next()
                 # Wait for a 'TPV' report and display the current time
                 # To see all report data, uncomment the line below
                 # print(report)
