@@ -10,21 +10,51 @@
 
 import sys
 from PyQt5 import QtWidgets,QtCore
-from dashboard import Ui_Dashboard
+from GUI.dashboard import Ui_Dashboard
 import time
 
 from GPS import myGps
+from TEMP import myTemp
 
 class mainWindow(Ui_Dashboard):
     def __init__(self):
         self.window = QtWidgets.QMainWindow()
         self.setupUi(self.window)
         self.window.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
-        # self.window.showFullScreen()
+        self.window.showFullScreen()
         self.testButton.clicked.connect(self.testRun)
 
         self.Gps = myGps.myGps()
-        self.threads.append(Gps)
+        self.Gps.newData.connect(self.onGpsDataReady)
+        self.Gps.start()
+
+        self.Temp = myTemp.myTemp()
+        self.Temp.newData.connect(self.onTempDataReady)
+        self.Temp.start()
+
+    ## --------------------------------------------------------------
+    ## Description :called when gpsdata is ready
+    ## NOTE :
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 18-19-2017 15:19:53
+    ## --------------------------------------------------------------
+    def onGpsDataReady (self,data):
+        print(data)
+        self.speedCounter.display(data['speed'])
+        
+            
+    ## --------------------------------------------------------------
+    ## Description :called when tempdata is ready
+    ## NOTE :
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 18-19-2017 15:19:53
+    ## --------------------------------------------------------------
+    def onTempDataReady (self,data):
+        print(data)
+        self.tempValue.display("%2.1f"%data)
+        
             
     ## --------------------------------------------------------------
     ## Description :test run
