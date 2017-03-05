@@ -1,0 +1,303 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:adafruit_ultimate_gps
+LIBS:rpi_3_gpio
+LIBS:carGpsHat-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L adafruit_ultimate_gps U1
+U 1 1 58A8767F
+P 7350 3850
+F 0 "U1" H 7300 3800 60  0000 C CNN
+F 1 "adafruit_ultimate_gps" H 7300 3800 60  0000 C CNN
+F 2 "MyLibs:adafruit_ultimate_gps" H 7300 4800 60  0000 C CNN
+F 3 "" H 7300 3800 60  0000 C CNN
+	1    7350 3850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5550 3100 6300 3100
+Wire Wire Line
+	6300 3100 6300 3700
+$Comp
+L RPI_3_GPIO P2
+U 1 1 58A883CC
+P 4550 4050
+F 0 "P2" H 4550 5100 50  0000 C CNN
+F 1 "RPI_3_GPIO" V 4550 4050 50  0000 C CNN
+F 2 "MyLibs:rpi3_gpio" H 4550 3100 50  0000 C CNN
+F 3 "" H 4550 3100 50  0000 C CNN
+	1    4550 4050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3550 3500 3200 3500
+Wire Wire Line
+	3200 2600 3200 3900
+Wire Wire Line
+	3200 2600 6050 2600
+Wire Wire Line
+	6050 2600 6050 3600
+Wire Wire Line
+	6050 3600 6600 3600
+Wire Wire Line
+	5550 3500 6400 3500
+Wire Wire Line
+	6400 3500 6400 3400
+Wire Wire Line
+	6400 3400 6600 3400
+Wire Wire Line
+	5550 3400 6150 3400
+Wire Wire Line
+	6150 3400 6150 3500
+Wire Wire Line
+	6150 3500 6600 3500
+NoConn ~ 6600 3000
+NoConn ~ 6600 3100
+NoConn ~ 6600 3200
+NoConn ~ 6600 3300
+NoConn ~ 6600 3800
+NoConn ~ 5550 5000
+NoConn ~ 5550 4900
+NoConn ~ 5550 4800
+NoConn ~ 5550 4700
+NoConn ~ 5550 4600
+NoConn ~ 5550 4500
+NoConn ~ 5550 4400
+NoConn ~ 5550 4300
+NoConn ~ 5550 4200
+NoConn ~ 5550 4100
+NoConn ~ 5550 4000
+NoConn ~ 5550 3900
+NoConn ~ 5550 3800
+NoConn ~ 5550 3700
+NoConn ~ 5550 3600
+NoConn ~ 5550 3300
+NoConn ~ 5550 3200
+NoConn ~ 3550 5000
+NoConn ~ 3550 4400
+NoConn ~ 3550 4300
+NoConn ~ 3550 4200
+NoConn ~ 3550 4100
+NoConn ~ 3550 4000
+NoConn ~ 3550 3900
+NoConn ~ 3550 3800
+NoConn ~ 3550 3700
+NoConn ~ 3550 3600
+NoConn ~ 3550 3300
+NoConn ~ 3550 3200
+NoConn ~ 6800 3850
+$Comp
+L CONN_01X02 Power1
+U 1 1 58BAAB41
+P 4850 2050
+F 0 "Power1" H 4850 2200 50  0000 C CNN
+F 1 "CONN_01X02" V 4950 2050 50  0000 C CNN
+F 2 "MyLibs:2pinConnector" H 4850 2050 50  0000 C CNN
+F 3 "" H 4850 2050 50  0000 C CNN
+	1    4850 2050
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4800 2250 4800 2600
+Connection ~ 4800 2600
+Wire Wire Line
+	4900 2250 5700 2250
+Wire Wire Line
+	5700 2250 5700 3100
+Connection ~ 5700 3100
+Wire Wire Line
+	6300 3700 6600 3700
+$Comp
+L CONN_01X03 P1
+U 1 1 58BAC941
+P 2400 3200
+F 0 "P1" H 2400 3400 50  0000 C CNN
+F 1 "TEMP" V 2500 3200 50  0000 C CNN
+F 2 "MyLibs:3pinConnector" H 2400 3200 50  0000 C CNN
+F 3 "" H 2400 3200 50  0000 C CNN
+	1    2400 3200
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	2600 3100 3550 3100
+Wire Wire Line
+	2600 3200 3200 3200
+Connection ~ 3200 3200
+Wire Wire Line
+	2600 3300 3300 3300
+Wire Wire Line
+	3300 3300 3300 3400
+Wire Wire Line
+	3300 3400 3550 3400
+$Comp
+L GND #PWR01
+U 1 1 58BACB93
+P 4300 2400
+F 0 "#PWR01" H 4300 2150 50  0001 C CNN
+F 1 "GND" H 4300 2250 50  0000 C CNN
+F 2 "" H 4300 2400 50  0000 C CNN
+F 3 "" H 4300 2400 50  0000 C CNN
+	1    4300 2400
+	-1   0    0    1   
+$EndComp
+$Comp
+L +5V #PWR02
+U 1 1 58BACBCF
+P 5250 2050
+F 0 "#PWR02" H 5250 1900 50  0001 C CNN
+F 1 "+5V" H 5250 2190 50  0000 C CNN
+F 2 "" H 5250 2050 50  0000 C CNN
+F 3 "" H 5250 2050 50  0000 C CNN
+	1    5250 2050
+	1    0    0    -1  
+$EndComp
+Connection ~ 4300 2600
+Connection ~ 5250 2250
+Wire Wire Line
+	4300 2400 4300 2600
+Wire Wire Line
+	5250 2050 5250 2250
+$Comp
+L PWR_FLAG #FLG03
+U 1 1 58BACDBB
+P 5400 2050
+F 0 "#FLG03" H 5400 2145 50  0001 C CNN
+F 1 "PWR_FLAG" H 5400 2230 50  0000 C CNN
+F 2 "" H 5400 2050 50  0000 C CNN
+F 3 "" H 5400 2050 50  0000 C CNN
+	1    5400 2050
+	1    0    0    -1  
+$EndComp
+$Comp
+L PWR_FLAG #FLG04
+U 1 1 58BACDD7
+P 4050 2400
+F 0 "#FLG04" H 4050 2495 50  0001 C CNN
+F 1 "PWR_FLAG" H 4050 2580 50  0000 C CNN
+F 2 "" H 4050 2400 50  0000 C CNN
+F 3 "" H 4050 2400 50  0000 C CNN
+	1    4050 2400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5250 2050 5400 2050
+Wire Wire Line
+	4050 2400 4300 2400
+Connection ~ 3400 3100
+Connection ~ 3400 3400
+$Comp
+L R R1
+U 1 1 58BAD104
+P 3400 3250
+F 0 "R1" V 3480 3250 50  0000 C CNN
+F 1 "R" V 3400 3250 50  0000 C CNN
+F 2 "Resistors_ThroughHole:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 3330 3250 50  0000 C CNN
+F 3 "" H 3400 3250 50  0000 C CNN
+	1    3400 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_01X08 P3
+U 1 1 58BBBF3C
+P 2400 4150
+F 0 "P3" H 2400 4600 50  0000 C CNN
+F 1 "CONN_01X08" V 2500 4150 50  0000 C CNN
+F 2 "MyLibs:bornier_8_vis" H 2400 4150 50  0000 C CNN
+F 3 "" H 2400 4150 50  0000 C CNN
+	1    2400 4150
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3200 3900 2600 3900
+Connection ~ 3200 3500
+Wire Wire Line
+	2600 3800 2600 3600
+Wire Wire Line
+	2600 3600 2150 3600
+Wire Wire Line
+	2150 3600 2150 2950
+Wire Wire Line
+	2150 2950 2800 2950
+Wire Wire Line
+	2800 2950 2800 3100
+Connection ~ 2800 3100
+Wire Wire Line
+	2600 4000 3050 4000
+Wire Wire Line
+	3050 4000 3050 2800
+Wire Wire Line
+	3050 2800 5700 2800
+Connection ~ 5700 2800
+Wire Wire Line
+	2600 4500 2950 4500
+Wire Wire Line
+	2950 4500 2950 4900
+Wire Wire Line
+	2950 4900 3550 4900
+Wire Wire Line
+	3550 4800 3000 4800
+Wire Wire Line
+	3000 4800 3000 4400
+Wire Wire Line
+	3000 4400 2600 4400
+Wire Wire Line
+	2600 4300 3050 4300
+Wire Wire Line
+	3050 4300 3050 4700
+Wire Wire Line
+	3050 4700 3550 4700
+Wire Wire Line
+	3100 4600 3550 4600
+Wire Wire Line
+	3100 4200 3100 4600
+Wire Wire Line
+	3100 4200 2600 4200
+Wire Wire Line
+	2600 4100 3150 4100
+Wire Wire Line
+	3150 4100 3150 4500
+Wire Wire Line
+	3150 4500 3550 4500
+$EndSCHEMATC
