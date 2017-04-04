@@ -1,4 +1,4 @@
-(kicad_pcb (version 4) (host pcbnew 4.0.5-e0-6337~49~ubuntu16.04.1)
+(kicad_pcb (version 4) (host pcbnew 4.0.6-e0-6349~53~ubuntu16.04.1)
 
   (general
     (links 19)
@@ -403,7 +403,7 @@
   (gr_text gnd (at 140.97 76.2 90) (layer F.Cu)
     (effects (font (size 0.8 0.8) (thickness 0.1)))
   )
-  (gr_text 5v (at 143.51 76.2 90) (layer F.Cu)
+  (gr_text 3.3V (at 143.51 76.2 90) (layer F.Cu)
     (effects (font (size 0.8 0.8) (thickness 0.1)))
   )
 
