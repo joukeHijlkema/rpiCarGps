@@ -11,7 +11,7 @@
 import sys
 from PyQt5 import QtWidgets,QtCore
 # from GUI.dashboard import Ui_Dashboard
-from GUI.mainWindow import mainWindow
+from QT.GUI.mainWindow import mainWindow
 
 import time
 
