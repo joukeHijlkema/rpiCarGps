@@ -1,0 +1,19 @@
+#Value {
+    /* border:solid 1px; */
+    color: #0022FF;
+}
+
+#speedMeter #Value{
+    font-size:60px;  
+}
+#dayDist #Value,#totDist #Value{
+    font-size:40px;  
+}
+
+
+#Units {
+    font-size:20px;
+}
+#Units {
+    font:20px bold;
+}

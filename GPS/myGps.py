@@ -1,29 +1,30 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 #  =================================================
-# myGps
+# Trigger
 #   - Author jouke hijlkema <jouke.hijlkema@onera.fr>
-#   - Sun Feb 12 17:57:16 2017
+#   - jeu. avril 17:29 2017
 #   - Initial Version 1.0
 #  =================================================
+import threading
 import gps
-from PyQt5 import QtCore, QtGui
+from blinker import signal
 import time
 import random
 
-class myGps(QtCore.QThread):
-    
-    newData = QtCore.pyqtSignal(object)
-    test    = False
+class Gps(threading.Thread):
+    test    = True
     data    = {}
     def __init__(self):
         "listen to gps data and emit some if anything new arrives"
-        QtCore.QThread.__init__(self)
+        super(Gps, self).__init__()
         
         # Listen on port 2947 (gpsd) of localhost
-        self.session = gps.gps("localhost", "2947")
+        self.session                   = gps.gps("localhost", "2947")
         self.session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+        self.newData                   = signal('Gps')
+        self.Doit = True
 
     ## --------------------------------------------------------------
     ## Description :run
@@ -34,13 +35,14 @@ class myGps(QtCore.QThread):
     ## --------------------------------------------------------------
     def run (self):
         if self.test==True:
-            while True:
+            print "test run"
+            while self.Doit:
                 self.data.clear()
                 self.data['speed']=random.randrange(0,100,1)
-                self.newData.emit(self.data)
+                self.newData.send('Gps', data=self.data)
                 time.sleep(1)
         else:
-            while True:
+            while self.Doit:
                 try:
                     report = self.session.next()
                     # Wait for a 'TPV' report and display the current time
@@ -52,6 +54,7 @@ class myGps(QtCore.QThread):
                             if hasattr(report, i):
                                 exec("self.data['{0}']=report.{0}".format(i))
                         self.newData.emit(self.data)
+                        self.newData.send('Gps', data=self.data)
                 except KeyError:
                     pass
                 except KeyboardInterrupt:
@@ -59,3 +62,4 @@ class myGps(QtCore.QThread):
                 except StopIteration:
                     self.session = None
                     print("GPSD has terminated")
+    
