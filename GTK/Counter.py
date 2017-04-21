@@ -10,6 +10,9 @@
 from gi.repository import Gtk
 
 class Counter(Gtk.Box):
+
+    conversion={"km":0.001,"km/h":3.6}
+    
     def __init__(self,parent,w,h,name,title):
         "docstring"
         print("Counter")
@@ -47,9 +50,9 @@ class Counter(Gtk.Box):
     ## date   : 20-04-2017 14:04:19
     ## --------------------------------------------------------------
     def update (self,value):
-        v=0.0
-        if self.units=="km":
-            v = 0.001*value
+        print "update to %s"%value
+        
+        v = self.conversion[self.units]*value
 
         self.Value.set_text("%d"%v)
         self.Units.set_text("%s"%self.units)
