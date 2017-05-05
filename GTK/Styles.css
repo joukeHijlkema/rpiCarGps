@@ -4,16 +4,13 @@
 }
 
 #speedMeter #Value{
-    font-size:60px;  
+    font-size:80px;  
 }
 #dayDist #Value,#totDist #Value{
     font-size:40px;  
 }
 
-
 #Units {
     font-size:20px;
-}
-#Units {
     font:20px bold;
 }

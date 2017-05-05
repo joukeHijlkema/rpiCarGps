@@ -4,19 +4,20 @@
 #  =================================================
 # Trigger
 #   - Author jouke hijlkema <jouke.hijlkema@onera.fr>
-#   - jeu. avril 13:53 2017
+#   - lun. mai 22:33 2017
 #   - Initial Version 1.0
 #  =================================================
 from gi.repository import Gtk
 from Counter import Counter
+import arrow
 
-class dayDist(Counter):
+class Time(Counter):
     def __init__(self,parent,w,h,name,title):
         "docstring"
-        super(dayDist, self).__init__(parent,w,h,name,title)
+        super(Time, self).__init__(parent,w,h,name,title)
 
-        self.units = "km"
-        self.update(0)
+        self.units = "°C"
+        self.update("0")
 
     ## --------------------------------------------------------------
     ## Description : update la vitesse
@@ -26,8 +27,12 @@ class dayDist(Counter):
     ## date   : 20-04-2017 14:04:19
     ## --------------------------------------------------------------
     def update (self,value):
-        v = self.conversion[self.units]*value
-        # print "update dayDist to %s (%s)"%(v,value)
-        self.Value.set_markup("<span font_desc=\"30\">%3.1f</span>"%v)
-        self.Units.set_label("%s"%self.units)
+        v = value.split("#")
+        t = arrow.get(v[0]).to('Europe/Paris')
+        if len(v)>1:
+            temp = float(v[1])
+        else:
+            temp = 0.0
+        self.Value.set_markup("<span font_desc=\"30\">%s - %3.1f</span>"%(t.format('HH:mm:ss'),temp))
+        self.Units.set_markup("<span font_desc=\"20\">%s</span>"%self.units)
         return True

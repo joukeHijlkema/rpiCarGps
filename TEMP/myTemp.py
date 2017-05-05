@@ -7,25 +7,26 @@
 #   - sam. mars 13:53 2017
 #   - Initial Version 1.0
 #  =================================================
-
+import threading
+from blinker import signal
 import os
 import glob
 import time
-from PyQt5 import QtCore, QtGui
 
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
-class myTemp(QtCore.QThread):
+class myTemp(threading.Thread):
 
-    newData       = QtCore.pyqtSignal(object)
     base_dir      = '/sys/bus/w1/devices/'
     device_folder = glob.glob(base_dir + '28*')[0]
     device_file   = device_folder + '/w1_slave'
 
     def __init__(self):
         "read temperature from probe"
-        QtCore.QThread.__init__(self)
+        super(myTemp, self).__init__()
+        self.newData  = signal("Temp")
+        self.Doit = True
 
     ## --------------------------------------------------------------
     ## Description :run
@@ -35,9 +36,10 @@ class myTemp(QtCore.QThread):
     ## date   : 04-02-2017 14:02:21
     ## --------------------------------------------------------------
     def run (self):
-        while True:
-	    self.newData.emit(self.readTemp())
-	    time.sleep(5)
+        while self.Doit:
+	    self.newData.send(self.readTemp())
+            # print "temp = %s °C"%self.readTemp()
+	    time.sleep(1)
 
     ## --------------------------------------------------------------
     ## Description :read raw temp
@@ -70,5 +72,4 @@ class myTemp(QtCore.QThread):
             temp_string = lines[1][equals_pos+2:]
             temp_c = float(temp_string) / 1000.0
 
-        print "temp = %s °C"%temp_c
         return temp_c

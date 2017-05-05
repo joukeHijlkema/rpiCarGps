@@ -8,67 +8,57 @@
 #   - Initial Version 1.0
 #  =================================================
 from gi.repository import Gtk,Gdk
-from blinker import signal
 
 from GPS.gtkNavit import Navit
 from speedMeter import speedMeter
 from dayDist import dayDist
 from totDist import totDist
+from Time import Time
 
 class mainGtk(Gtk.Window):
+    Init = True
     def __init__(self,w,h):
         "docstring"
         super(mainGtk, self).__init__(title="Car GPS")
         print "main window"
         self.set_size_request(w, h)
+        self.fullscreen()
 
         grid = Gtk.Grid()
         grid.show()
         self.add(grid)
 
-        self.mySpeedMeter  = speedMeter(self,320,20,"speedMeter","Vitesse:")
-        self.myDayDist     = dayDist(self,320,20,"dayDist","Aujourd'hui:")
-        self.myTotDist     = totDist(self,320,20,"totDist","Totale:")
+        self.mySpeedMeter  = speedMeter(self,320,100,"speedMeter","")
+        self.myDayDist     = dayDist(self,320,20,"dayDist","Jour:")
+        self.myTotDist     = totDist(self,320,20,"totDist","Total:")
+        self.myTime        = Time(self,320,20,"Time","")
         self.myNavit       = Navit(self,700,600)
+        self.quitButton    = Gtk.Button.new_with_label("quit")
 
         self.myTotDist.set_vexpand(True)
         self.myTotDist.set_valign(Gtk.Align.START)
 
+        self.quitButton.set_size_request(320,100);
+
         grid.attach(self.mySpeedMeter,0,0,1,1)
         grid.attach(self.myDayDist,0,1,1,1)
         grid.attach(self.myTotDist,0,2,1,1)
-        grid.attach(self.myNavit,1,0,1,4)
+        grid.attach(self.myTime,0,3,1,1)
+        grid.attach(self.quitButton,0,4,1,1)
+        grid.attach(self.myNavit,1,0,1,5)
 
-        self.myNavit.run()
+        self.myNavit.start()
 
         # Stylesheets
         myCss = Gtk.CssProvider()
-        print("loading css : %s"%Gtk.CssProvider.load_from_path(myCss,"/home/hylkema/Projects/rpiCarGps/GTK/Styles.css"))
+        myCss.load_from_path("/home/pi/Software/rpiCarGps/GTK/Styles.css")
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(), 
             myCss,     
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
-        #Signaling
-        gpsData = signal('Gps')
-        gpsData.connect(self.gotGpsData)
-
         self.show_all()
-
-
-    ## --------------------------------------------------------------
-    ## Description : signaling
-    ## NOTE : 
-    ## -
-    ## Author : jouke hylkema
-    ## date   : 21-23-2017 17:23:21
-    ## --------------------------------------------------------------
-    def gotGpsData(self,sender, **kw):
-        print("Got a signal sent by %r, data= %r" %(sender,kw))
-        self.mySpeedMeter.update(kw['data']['speed'])
-        
-       
 
         
 

@@ -14,17 +14,17 @@ import time
 import random
 
 class Gps(threading.Thread):
-    test    = True
+    test    = False
     data    = {}
     def __init__(self):
         "listen to gps data and emit some if anything new arrives"
         super(Gps, self).__init__()
         
         # Listen on port 2947 (gpsd) of localhost
-        self.session                   = gps.gps("localhost", "2947")
+        self.session  = gps.gps("localhost", "2947")
         self.session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
-        self.newData                   = signal('Gps')
-        self.Doit = True
+        self.newData  = signal('Gps')
+        self.Doit     = True
 
     ## --------------------------------------------------------------
     ## Description :run
@@ -53,8 +53,7 @@ class Gps(threading.Thread):
                         for i in ['time','speed','lon','lat']:
                             if hasattr(report, i):
                                 exec("self.data['{0}']=report.{0}".format(i))
-                        self.newData.emit(self.data)
-                        self.newData.send('Gps', data=self.data)
+                        self.newData.send(self.data)
                 except KeyError:
                     pass
                 except KeyboardInterrupt:

@@ -10,11 +10,13 @@
 
 from gi.repository import Gtk
 import subprocess, os
+import threading
 
-class Navit(Gtk.Box):
+class Navit(Gtk.Box,threading.Thread):
     def __init__(self,parent,w,h):
         "docstring"
         super(Gtk.Box, self).__init__()
+        threading.Thread.__init__(self)
         
         self.socket = Gtk.Socket.new()
         self.socket.set_size_request(w, h)
@@ -34,3 +36,4 @@ class Navit(Gtk.Box):
         print("socket id = 0x%x"%Gtk.Socket.get_id(self.socket))
         subprocess.Popen("navit", env=dict(os.environ, NAVIT_XID="%s"%id))
         
+    
