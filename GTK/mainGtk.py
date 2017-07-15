@@ -17,12 +17,12 @@ from Time import Time
 
 class mainGtk(Gtk.Window):
     Init = True
-    def __init__(self,w,h):
+    def __init__(self,w,h,path):
         "docstring"
         super(mainGtk, self).__init__(title="Car GPS")
         print "main window"
         self.set_size_request(w, h)
-        self.fullscreen()
+        # self.fullscreen()
 
         grid = Gtk.Grid()
         grid.show()
@@ -51,7 +51,7 @@ class mainGtk(Gtk.Window):
 
         # Stylesheets
         myCss = Gtk.CssProvider()
-        myCss.load_from_path("/home/pi/Software/rpiCarGps/GTK/Styles.css")
+        myCss.load_from_path(path)
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(), 
             myCss,     

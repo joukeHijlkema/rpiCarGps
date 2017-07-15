@@ -43,6 +43,7 @@ class dataBase(threading.Thread):
                 print(err)
         else:
             print "connection OK"
+        return "running"
         
     def Put(self,What,Values):
         print "add %s to %s"%(Values,What)

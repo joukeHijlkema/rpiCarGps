@@ -14,11 +14,12 @@ import time
 import random
 
 class Gps(threading.Thread):
-    test    = False
     data    = {}
-    def __init__(self):
+    def __init__(self,real):
         "listen to gps data and emit some if anything new arrives"
         super(Gps, self).__init__()
+
+        self.test = not real
         
         # Listen on port 2947 (gpsd) of localhost
         self.session  = gps.gps("localhost", "2947")
@@ -38,8 +39,11 @@ class Gps(threading.Thread):
             print "test run"
             while self.Doit:
                 self.data.clear()
-                self.data['speed']=random.randrange(0,100,1)
-                self.newData.send('Gps', data=self.data)
+                self.data['speed'] = random.randrange(0,100,1)
+                self.data['time']  = "2017-05-03 09:00:05"
+                self.data['lon']   = 43.168583333
+                self.data['lat']   = 1.191853333
+                self.newData.send(self.data)
                 time.sleep(1)
         else:
             while self.Doit:
@@ -60,5 +64,4 @@ class Gps(threading.Thread):
                     quit()
                 except StopIteration:
                     self.session = None
-                    print("GPSD has terminated")
     

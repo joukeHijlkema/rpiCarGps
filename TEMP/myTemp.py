@@ -13,20 +13,23 @@ import os
 import glob
 import time
 
-os.system('modprobe w1-gpio')
-os.system('modprobe w1-therm')
-
 class myTemp(threading.Thread):
 
-    base_dir      = '/sys/bus/w1/devices/'
-    device_folder = glob.glob(base_dir + '28*')[0]
-    device_file   = device_folder + '/w1_slave'
-
-    def __init__(self):
+    def __init__(self,real):
         "read temperature from probe"
         super(myTemp, self).__init__()
+
+        self.real = real;
+        if self.real:
+            os.system('modprobe w1-gpio')
+            os.system('modprobe w1-therm')
+        
+            self.base_dir      = '/sys/bus/w1/devices/'
+            self.device_folder = glob.glob(base_dir + '28*')[0]
+            self.device_file   = device_folder + '/w1_slave'
+            
         self.newData  = signal("Temp")
-        self.Doit = True
+        self.Doit     = True
 
     ## --------------------------------------------------------------
     ## Description :run
@@ -65,6 +68,9 @@ class myTemp(threading.Thread):
     ## date   : 04-04-2017 14:04:44
     ## --------------------------------------------------------------
     def readTemp (self):
+        if not self.real:
+            return 12.34
+        
         lines = self.readRaw()
         equals_pos = lines[1].find('t=')
         temp_c="-1000"

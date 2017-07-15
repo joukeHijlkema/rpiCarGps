@@ -7,6 +7,9 @@
 #   - ven. avril 16:24 2017
 #   - Initial Version 1.0
 #  =================================================
+## ========= TODO =============
+## - Add altitude
+## ============================
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GObject
@@ -32,7 +35,7 @@ data["TEMP"]={}
 def gotGpsData(gpsData):
     global data,db
 
-    # print("Got a signal sent by %r, data= %r" %(sender,kw))
+    print("Got GPS data data= %s" %gpsData)
     data["GPS"] = gpsData
     db.addPoint(gpsData)
     data["DB"]["dayDist"] = db.dayDist()
@@ -47,7 +50,7 @@ def gotGpsData(gpsData):
 ## --------------------------------------------------------------
 def gotTempData (tempData):
     global data
-    # print "temp = %s C"%tempData
+    print "temp = %s C"%tempData
     data["TEMP"]["Value"] = tempData
     
 ## --------------------------------------------------------------
@@ -80,10 +83,15 @@ def Quit(*args):
     temp.Doit=False
     Gtk.main_quit()
 
-win = MainWindow(1024,600)
+real=False ## maak dat GPS en TEMP werken als dummies waneer niet op rpi
 
+if real:
+    win = MainWindow(1024,600,"/home/pi/Software/rpiCarGps/GTK/Styles.css")
+else:
+    win = MainWindow(1024,600,"/home/hylkema/Projects/rpiCarGps/GTK/Styles.css")
+    
 # GPS
-myGps = Gps()
+myGps = Gps(real)
 myGps.start()
 
 # Database
@@ -91,7 +99,7 @@ db = dataBase("Jouke","!Jouke","localhost","busGps")
 db.start()
 
 # Temperature
-temp = myTemp()
+temp = myTemp(real)
 temp.start()
 
 #Signaling
