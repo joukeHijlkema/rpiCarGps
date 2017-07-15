@@ -20,6 +20,8 @@ from GPS.myGps import Gps
 from DB.dataBase import dataBase
 from TEMP.myTemp import myTemp
 
+import os
+
 data = {}
 data["GPS"]={}
 data["DB"]={}
@@ -83,12 +85,11 @@ def Quit(*args):
     temp.Doit=False
     Gtk.main_quit()
 
-real=False ## maak dat GPS en TEMP werken als dummies waneer niet op rpi
+real=("armv7l" in os.uname()[4])
+print "real = %s"%real
 
-if real:
-    win = MainWindow(1024,600,"/home/pi/Software/rpiCarGps/GTK/Styles.css")
-else:
-    win = MainWindow(1024,600,"/home/hylkema/Projects/rpiCarGps/GTK/Styles.css")
+print "%s/GTK/Styles.css"%os.getcwd()
+win = MainWindow(1024,600,"%s/GTK/Styles.css"%os.getcwd())
     
 # GPS
 myGps = Gps(real)
