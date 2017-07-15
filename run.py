@@ -86,10 +86,7 @@ def Quit(*args):
     Gtk.main_quit()
 
 real=("armv7l" in os.uname()[4])
-print "real = %s"%real
-
-print "%s/GTK/Styles.css"%os.getcwd()
-win = MainWindow(1024,600,"%s/GTK/Styles.css"%os.getcwd())
+win = MainWindow(1024,600,"%s/GTK/Styles.css"%os.getcwd(),real)
     
 # GPS
 myGps = Gps(real)

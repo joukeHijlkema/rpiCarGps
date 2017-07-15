@@ -17,12 +17,13 @@ from Time import Time
 
 class mainGtk(Gtk.Window):
     Init = True
-    def __init__(self,w,h,path):
+    def __init__(self,w,h,path,real):
         "docstring"
         super(mainGtk, self).__init__(title="Car GPS")
         print "main window"
         self.set_size_request(w, h)
-        # self.fullscreen()
+        if real:
+            self.fullscreen()
 
         grid = Gtk.Grid()
         grid.show()
