@@ -21,6 +21,7 @@ from DB.dataBase import dataBase
 from TEMP.myTemp import myTemp
 
 import os
+import sys
 
 data = {}
 data["GPS"]={}
@@ -40,7 +41,7 @@ def gotGpsData(gpsData):
     print("Got GPS data data= %s" %gpsData)
     data["GPS"] = gpsData
     db.addPoint(gpsData)
-    data["DB"]["dayDist"] = db.dayDist()
+    data["DB"]["dayDist"] = db.dayDist(back=2)
     data["DB"]["totDist"] = db.totDist()
 
 ## --------------------------------------------------------------
@@ -86,7 +87,10 @@ def Quit(*args):
     Gtk.main_quit()
 
 real=("armv7l" in os.uname()[4])
-win = MainWindow(1024,600,"%s/GTK/Styles.css"%os.getcwd(),real)
+rootPath = os.path.dirname(os.path.realpath(sys.argv[0]))
+print "root = %s"%rootPath
+win = MainWindow(1024,600,"%s/GTK/Styles.css"%rootPath,real)
+# win = MainWindow(1024,600,"./GTK/Styles.css",real)
     
 # GPS
 myGps = Gps(real)
