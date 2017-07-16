@@ -14,6 +14,7 @@ class tripDist(Counter):
     def __init__(self,parent,w,h,name,title):
         "docstring"
         super(tripDist, self).__init__(parent,w,h,name,title)
+        self.parent = parent
 
         self.units = "km"
         self.update(0)
@@ -32,8 +33,12 @@ class tripDist(Counter):
     ## date   : 16-15-2017 12:15:52
     ## --------------------------------------------------------------
     def myReset (self,widget):
-        self.returnSignal.send("reset")
-        print "reset trip"
+        dialog = Gtk.MessageDialog(self.parent, 0, Gtk.MessageType.WARNING,
+                                   Gtk.ButtonsType.OK_CANCEL, "Reset trip ?")
+        rep = dialog.run()
+        if rep == Gtk.ResponseType.OK:
+            self.returnSignal.send("reset")
+        dialog.destroy()
     ## --------------------------------------------------------------
     ## Description : update la vitesse
     ## NOTE : 

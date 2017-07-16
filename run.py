@@ -22,6 +22,7 @@ from TEMP.myTemp import myTemp
 
 import os
 import sys
+import time
 
 data = {}
 data["GPS"]={}
@@ -39,10 +40,11 @@ def gotGpsData(gpsData):
     global data,db,win
 
     data["GPS"] = gpsData
-    db.addPoint(gpsData)
-    data["DB"]["dayDist"]  = db.dayDist(back=win.myDayDist.offset)
-    data["DB"]["tripDist"] = db.tripDist()
-    data["DB"]["totDist"]  = db.totDist()
+    if db.addPoint(gpsData):
+        data["DB"]["dayDist"]  = db.dayDist(back=win.myDayDist.offset)
+        data["DB"]["tripDist"] = db.tripDist()
+        data["DB"]["totDist"]  = db.totDist()
+        print(data["DB"])
 
 ## --------------------------------------------------------------
 ## Description : got temperature reading
@@ -105,6 +107,7 @@ real=("armv7l" in os.uname()[4])
 rootPath = os.path.dirname(os.path.realpath(sys.argv[0]))
 print "root = %s"%rootPath
 win = MainWindow(1024,600,"%s/GTK/Styles.css"%rootPath,real)
+time.sleep(1)
     
 # GPS
 myGps = Gps(real)

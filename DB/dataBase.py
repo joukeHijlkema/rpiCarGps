@@ -203,7 +203,7 @@ class dataBase(threading.Thread):
     ## date   : 02-33-2017 13:33:26
     ## --------------------------------------------------------------
     def tripDist (self):
-        return self.SDistance(self.Get("SELECT Gps.Lat,Gps.Lon FROM Gps, Temp  WHERE DATE(Gps.Time) >= Temp.tripStart"))
+        return self.SDistance(self.Get("SELECT Gps.Lat,Gps.Lon FROM Gps, Temp  WHERE DATE(Gps.Time) >= DATE(Temp.tripStart)"))
         
     ## --------------------------------------------------------------
     ## Description : reset the trip
@@ -213,5 +213,5 @@ class dataBase(threading.Thread):
     ## date   : 16-04-2017 13:04:59
     ## --------------------------------------------------------------
     def resetTrip (self):
-        print("BD: reset the trip")
-        self.Exec("UPDATE Temp SET tripStart=CURDATE()")
+        print("DB : reset trip")
+        self.Exec("UPDATE Temp SET tripStart=DATE(CURDATE())")
