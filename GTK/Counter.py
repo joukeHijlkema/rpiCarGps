@@ -23,14 +23,13 @@ class Counter(Gtk.Box):
         # self.set_spacing(10)
 
         if not title == "":
-            w1=0.3*w
-            w2=0.5*w
+            w1=0.2*w
+            w2=0.3*w
             w3=0.1*w
             self.Title  = Gtk.Label.new(title)
             self.Title.set_name("Title")
             self.Title.set_size_request(w1,h)
             self.add(self.Title)
-
         else:
             w2=0.8*w
             w3=0.1*w
