@@ -11,6 +11,7 @@ import threading
 import gps
 from blinker import signal
 import time
+import arrow
 import random
 
 class Gps(threading.Thread):
@@ -27,6 +28,9 @@ class Gps(threading.Thread):
         self.newData  = signal('Gps')
         self.Doit     = True
 
+        self.dummyLat = 43.168583333
+        self.dummyLon = 1.191853333
+        
     ## --------------------------------------------------------------
     ## Description :run
     ## NOTE :
@@ -40,9 +44,11 @@ class Gps(threading.Thread):
             while self.Doit:
                 self.data.clear()
                 self.data['speed'] = random.randrange(0,100,1)
-                self.data['time']  = "2017-05-03 09:00:05"
-                self.data['lon']   = 43.168583333
-                self.data['lat']   = 1.191853333
+                self.data['time']  = arrow.now().format("YY-MM-DD HH:mm:ss")
+                self.dummyLon+=0.001
+                self.dummyLat+=0.001
+                self.data['lon']   = self.dummyLon
+                self.data['lat']   = self.dummyLat
                 self.newData.send(self.data)
                 time.sleep(1)
         else:

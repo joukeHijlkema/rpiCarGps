@@ -58,7 +58,7 @@ class dataBase(threading.Thread):
         self.cnx.close()
         
     def Put(self,What,Values):
-        print "add %s to %s"%(Values,What)
+        # print "add %s to %s"%(Values,What)
         while not self.cnx.is_connected():
             self.cnx.reconnect()
             # print "reconnecting to db"
@@ -130,7 +130,8 @@ class dataBase(threading.Thread):
         if d>50.0:
             self.Put(("INSERT INTO Gps (Lat,Lon,Time) VALUES (%s,%s,%s)"),
                     (data["lat"],data["lon"],data["time"]))
-            self.Exec("UPDATE Temp SET totDistance=%f WHERE ID=1"%d)
+            dist = self.GetOne("SELECT totDistance FROM Temp WHERE ID=1")+d
+            self.Exec("UPDATE Temp SET totDistance=%f WHERE ID=1"%dist)
             return True
         return False
 
