@@ -38,13 +38,11 @@ data["TEMP"]={}
 def gotGpsData(gpsData):
     global data,db,win
 
-    print("Got GPS data data= %s" %gpsData)
     data["GPS"] = gpsData
     db.addPoint(gpsData)
-    print("offset = %s"%win.myDayDist.offset)
-    data["DB"]["dayDist"] = db.dayDist(back=win.myDayDist.offset)
-    # data["DB"]["dayDist"] = db.dayDist(back=3)
-    data["DB"]["totDist"] = db.totDist()
+    data["DB"]["dayDist"]  = db.dayDist(back=win.myDayDist.offset)
+    data["DB"]["tripDist"] = db.tripDist()
+    data["DB"]["totDist"]  = db.totDist()
 
 ## --------------------------------------------------------------
 ## Description : got temperature reading
@@ -55,7 +53,7 @@ def gotGpsData(gpsData):
 ## --------------------------------------------------------------
 def gotTempData (tempData):
     global data
-    print "temp = %s C"%tempData
+    # print "temp = %s C"%tempData
     data["TEMP"]["Value"] = tempData
     
 ## --------------------------------------------------------------
@@ -71,6 +69,7 @@ def timedUpdate ():
         signal("speedMeter").send(data["GPS"]["speed"])
         signal("Time").send("%s#%s"%(data["GPS"]["time"],data["TEMP"]["Value"]))
         signal("dayDist").send(data["DB"]["dayDist"])
+        signal("tripDist").send(data["DB"]["tripDist"])
         signal("totDist").send(data["DB"]["totDist"])
     except:
         print "not all data worked"
@@ -84,9 +83,23 @@ def timedUpdate ():
 ## date   : 03-05-2017 10:05:20
 ## --------------------------------------------------------------
 def Quit(*args):
+    global db
+    db.Quit()
     myGps.Doit=False
     temp.Doit=False
     Gtk.main_quit()
+
+## --------------------------------------------------------------
+## Description : reset the trip
+## NOTE : 
+## -
+## Author : jouke hylkema
+## date   : 16-03-2017 14:03:11
+## --------------------------------------------------------------
+def resetTrip (data):
+    global db
+    print("reset trip in run")
+    db.resetTrip()
 
 real=("armv7l" in os.uname()[4])
 rootPath = os.path.dirname(os.path.realpath(sys.argv[0]))
@@ -110,6 +123,8 @@ gpsData = signal('Gps')
 gpsData.connect(gotGpsData)
 tempData = signal("Temp")
 tempData.connect(gotTempData)
+resetTripSignal = signal("tripDist_return")
+resetTripSignal.connect(resetTrip)
 
 win.connect("delete-event",Quit)
 win.quitButton.connect("clicked", Quit)

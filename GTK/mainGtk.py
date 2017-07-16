@@ -12,6 +12,7 @@ from gi.repository import Gtk,Gdk
 from GPS.gtkNavit import Navit
 from speedMeter import speedMeter
 from dayDist import dayDist
+from tripDist import tripDist
 from totDist import totDist
 from Time import Time
 
@@ -31,6 +32,7 @@ class mainGtk(Gtk.Window):
 
         self.mySpeedMeter  = speedMeter(self,320,100,"speedMeter","")
         self.myDayDist     = dayDist(self,320,20,"dayDist","Jour:")
+        self.mytripDist    = tripDist(self,320,20,"tripDist","Trip:")
         self.myTotDist     = totDist(self,320,20,"totDist","Total:")
         self.myTime        = Time(self,320,20,"Time","")
         self.myNavit       = Navit(self,700,600)
@@ -43,10 +45,11 @@ class mainGtk(Gtk.Window):
 
         grid.attach(self.mySpeedMeter,0,0,1,1)
         grid.attach(self.myDayDist,0,1,1,1)
-        grid.attach(self.myTotDist,0,2,1,1)
-        grid.attach(self.myTime,0,3,1,1)
-        grid.attach(self.quitButton,0,4,1,1)
-        grid.attach(self.myNavit,1,0,1,5)
+        grid.attach(self.mytripDist,0,2,1,1)
+        grid.attach(self.myTotDist,0,3,1,1)
+        grid.attach(self.myTime,0,4,1,1)
+        grid.attach(self.quitButton,0,5,1,1)
+        grid.attach(self.myNavit,1,0,1,6)
 
         self.myNavit.start()
 

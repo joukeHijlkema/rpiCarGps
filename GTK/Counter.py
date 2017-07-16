@@ -49,6 +49,7 @@ class Counter(Gtk.Box):
         self.set_size_request(w,h)
 
         self.updateSignal = signal(name)
+        self.returnSignal = signal("%s_return"%name)
         self.updateSignal.connect(self.update)
 
         self.color = "blue"
