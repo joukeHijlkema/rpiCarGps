@@ -41,9 +41,11 @@ class dayDist(Counter):
         if delta==1:
             self.offset+=1
             self.color = "red"
+            self.back.set_label("-%s"%self.offset)
         else:
             self.offset=0
             self.color = "blue"
+            self.back.set_label("-")
     ## --------------------------------------------------------------
     ## Description : update la vitesse
     ## NOTE : 

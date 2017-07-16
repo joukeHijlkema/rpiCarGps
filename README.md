@@ -53,7 +53,10 @@ A replacement for the speed indicator of my old van (and it does GPS and a lot m
 
 
 ## git repository
-`git clone https://github.com/joukeHijlkema/rpiCarGps.git <gpsDir>`
+
+``` script
+git clone https://github.com/joukeHijlkema/rpiCarGps.git <gpsDir>
+```
 
 ## Maps
 - Copy all your maps to /home/pi/Maps/
@@ -62,6 +65,8 @@ A replacement for the speed indicator of my old van (and it does GPS and a lot m
 ## to auto start
 put a file called rpiGps.desktop in ~/.config/autostart containing :
 
+
+``` script
 [Desktop Entry]
 Type=Application
 Exec=/home/pi/Projects/rpiCarGps/run.py
@@ -69,9 +74,9 @@ Hidden=false
 X-GNOME-Autostart-enabled=true
 Name=rpiCarGps
 Comment=rpiCarGps
-Terminal=true
+Terminal=false
 Icon=/home/pi/Projects/rpiCarGps/GUI/Icons/compass.png
 Path=/home/pi/Projects/rpiCarGps/
 StartupNotify=false
-X-KeepTerminal=true
+```
 

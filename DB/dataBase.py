@@ -161,3 +161,22 @@ class dataBase(threading.Thread):
     def totDist (self):
         return self.SDistance(self.Get("SELECT Lat,Lon FROM `Gps`"))
         
+    ## --------------------------------------------------------------
+    ## Description : calculate trip distance
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 02-33-2017 13:33:26
+    ## --------------------------------------------------------------
+    def tripDist (self):
+        return self.SDistance(self.Get("SELECT Lat,Lon FROM `Gps`"))
+        
+    ## --------------------------------------------------------------
+    ## Description : reset the trip
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 16-04-2017 13:04:59
+    ## --------------------------------------------------------------
+    def resetTrip (self):
+        print("BD: reset the trip")
