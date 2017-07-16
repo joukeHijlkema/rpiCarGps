@@ -145,8 +145,11 @@ class dataBase(threading.Thread):
     ## Author : jouke hylkema
     ## date   : 02-20-2017 13:20:45
     ## --------------------------------------------------------------
-    def dayDist (self):
-        return self.SDistance(self.Get("SELECT Lat,Lon FROM `Gps` WHERE DATE(Time) = CURDATE() ORDER BY Id DESC"))
+    def dayDist (self, *positional_parameters, **keyword_parameters):
+        date = "CURDATE()"
+        if 'back' in keyword_parameters:
+            date += "-%s"%keyword_parameters['back']
+        return self.SDistance(self.Get("SELECT Lat,Lon FROM `Gps` WHERE DATE(Time) = %s ORDER BY Id DESC"%date))
 
     ## --------------------------------------------------------------
     ## Description : calculate total distance

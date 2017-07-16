@@ -20,7 +20,7 @@ class Counter(Gtk.Box):
         super(Counter, self).__init__()
 
         self.set_name(name)
-        self.set_spacing(10)
+        # self.set_spacing(10)
 
         if not title == "":
             w1=0.3*w
@@ -50,6 +50,8 @@ class Counter(Gtk.Box):
 
         self.updateSignal = signal(name)
         self.updateSignal.connect(self.update)
+
+        self.color = "blue"
 
 
     ## --------------------------------------------------------------

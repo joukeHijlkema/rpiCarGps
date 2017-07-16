@@ -3,15 +3,27 @@ A replacement for the speed indicator of my old van (and it does GPS and a lot m
 
 # Instalation
 
-## for my screen
+## for my screen and temp sensor
 	[waveshare 7" touchscreen](http://www.waveshare.com/wiki/7inch_HDMI_LCD)
 
-	add this to end of config.txt
+	add this to end of /boot/config.txt
 
 	max_usb_current=1
 	hdmi_group=2
 	hdmi_mode=87
 	hdmi_cvt 1024 600 60 6 0 0 0
+	
+	dtoverlay=w1-gpio
+	
+## for the adafruit GPS
+
+	this is for my jessie version look at [adafruit](https://learn.adafruit.com/adafruit-ultimate-gps-on-the-raspberry-pi/using-uart-instead-of-usb) for details.
+	
+	-in /boot/cmdline.txt remove console=serial0,115200
+	-sudo systemctl stop serial-getty@ttyS0.service
+	-sudo systemctl disable serial-getty@ttyS0.service
+	-add enable_uart=1 to the end of /boot/config.txt
+	-add GPSD_OPTIONS="/dev/ttyS0 -F /var/run/gpsd.sock" to the end of /etc/default/gpsd
 	
 ## SSH
 
@@ -19,7 +31,7 @@ A replacement for the speed indicator of my old van (and it does GPS and a lot m
 	touch /boot/ssh
 
 ## dependencies
-	sudo apt install navit* mysql-server python-arrow python-gps
+	sudo apt install navit* mysql-server python-arrow gpsd gpsd-clients python-gps python-mysql.connector
 
 ## for the database:
 	mysql> CREATE DATABASE busGps;
@@ -29,7 +41,11 @@ A replacement for the speed indicator of my old van (and it does GPS and a lot m
 
 
 ## switch off screen blanking
-	add the folowing lines to /etc/xdg/lxsession/LXgfmDE/autostart
+	change two settings in /etc/kbd/config 
+	BLANK_TIME=0
+	POWERDOWN_TIME=0
+
+	add the folowing lines to /etc/xdg/lxsession/LXDE/autostart and /etc/xdg/lxsession/LXDE-pi/autostart
 	#@xscreensaver -no-splash
 	@xset s off
 	@xset -dpms
@@ -42,3 +58,20 @@ A replacement for the speed indicator of my old van (and it does GPS and a lot m
 ## Maps
 - Copy all your maps to /home/pi/Maps/
 - Copy <gpsDir>/GPS/myNavit.xml to ~/.navit/navit.xml
+
+## to auto start
+put a file called rpiGps.desktop in ~/.config/autostart containing :
+
+[Desktop Entry]
+Type=Application
+Exec=/home/pi/Projects/rpiCarGps/run.py
+Hidden=false
+X-GNOME-Autostart-enabled=true
+Name=rpiCarGps
+Comment=rpiCarGps
+Terminal=true
+Icon=/home/pi/Projects/rpiCarGps/GUI/Icons/compass.png
+Path=/home/pi/Projects/rpiCarGps/
+StartupNotify=false
+X-KeepTerminal=true
+

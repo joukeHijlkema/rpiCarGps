@@ -36,12 +36,14 @@ data["TEMP"]={}
 ## date   : 03-04-2017 10:04:28
 ## --------------------------------------------------------------
 def gotGpsData(gpsData):
-    global data,db
+    global data,db,win
 
     print("Got GPS data data= %s" %gpsData)
     data["GPS"] = gpsData
     db.addPoint(gpsData)
-    data["DB"]["dayDist"] = db.dayDist(back=2)
+    print("offset = %s"%win.myDayDist.offset)
+    data["DB"]["dayDist"] = db.dayDist(back=win.myDayDist.offset)
+    # data["DB"]["dayDist"] = db.dayDist(back=3)
     data["DB"]["totDist"] = db.totDist()
 
 ## --------------------------------------------------------------
@@ -90,7 +92,6 @@ real=("armv7l" in os.uname()[4])
 rootPath = os.path.dirname(os.path.realpath(sys.argv[0]))
 print "root = %s"%rootPath
 win = MainWindow(1024,600,"%s/GTK/Styles.css"%rootPath,real)
-# win = MainWindow(1024,600,"./GTK/Styles.css",real)
     
 # GPS
 myGps = Gps(real)
