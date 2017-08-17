@@ -2,3 +2,5 @@
 *.pyc
 TEMP/**
 *#
+DATA/**
+

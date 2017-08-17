@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>README.html</title>
+
+</head>
+
+<body>
+
+<h1>rpiCarGps</h1>
+
+<p>A replacement for the speed indicator of my old van (and it does GPS and a lot more)</p>
+
+<h1>Instalation</h1>
+
+<h2>for my screen and temp sensor</h2>
+
+<pre><code>[waveshare 7" touchscreen](http://www.waveshare.com/wiki/7inch_HDMI_LCD)
+
+add this to end of /boot/config.txt
+
+max_usb_current=1
+hdmi_group=2
+hdmi_mode=87
+hdmi_cvt 1024 600 60 6 0 0 0
+
+dtoverlay=w1-gpio
+</code></pre>
+
+<h2>for the adafruit GPS</h2>
+
+<pre><code>this is for my jessie version look at [adafruit](https://learn.adafruit.com/adafruit-ultimate-gps-on-the-raspberry-pi/using-uart-instead-of-usb) for details.
+
+-in /boot/cmdline.txt remove console=serial0,115200
+-sudo systemctl stop serial-getty@ttyS0.service
+-sudo systemctl disable serial-getty@ttyS0.service
+-add enable_uart=1 to the end of /boot/config.txt
+-add GPSD_OPTIONS="/dev/ttyS0 -F /var/run/gpsd.sock" to the end of /etc/default/gpsd
+</code></pre>
+
+<h2>SSH</h2>
+
+<pre><code>to allow for ssh acess
+touch /boot/ssh
+</code></pre>
+
+<h2>dependencies</h2>
+
+<pre><code>sudo apt install navit* mysql-server python-arrow gpsd gpsd-clients python-gps python-mysql.connector
+</code></pre>
+
+<h2>for the database:</h2>
+
+<pre><code>mysql&gt; CREATE DATABASE busGps;
+mysql&gt; SOURCE busGps.sql;
+mysql&gt; CREATE USER 'Jouke'@'localhost' IDENTIFIED BY '!Jouke';
+mysql&gt; GRANT SELECT, INSERT, UPDATE, DELETE ON `busGps`.* TO 'Jouke'@'localhost';
+</code></pre>
+
+<h2>switch off screen blanking</h2>
+
+<pre><code>change two settings in /etc/kbd/config 
+BLANK_TIME=0
+POWERDOWN_TIME=0
+
+add the folowing lines to /etc/xdg/lxsession/LXDE/autostart and /etc/xdg/lxsession/LXDE-pi/autostart
+#@xscreensaver -no-splash
+@xset s off
+@xset -dpms
+@xset s noblank
+</code></pre>
+
+<h2>git repository</h2>
+
+<p><code>script
+git clone https://github.com/joukeHijlkema/rpiCarGps.git &lt;gpsDir&gt;
+</code></p>
+
+<h2>Maps</h2>
+
+<ul>
+<li>Copy all your maps to /home/pi/Maps/</li>
+<li>Copy <gpsDir>/GPS/myNavit.xml to ~/.navit/navit.xml</li>
+</ul>
+
+<h2>to auto start</h2>
+
+<p>put a file called rpiGps.desktop in ~/.config/autostart containing :</p>
+
+<p><code>script
+[Desktop Entry]
+Type=Application
+Exec=/home/pi/Projects/rpiCarGps/run.py
+Hidden=false
+X-GNOME-Autostart-enabled=true
+Name=rpiCarGps
+Comment=rpiCarGps
+Terminal=false
+Icon=/home/pi/Projects/rpiCarGps/GUI/Icons/compass.png
+Path=/home/pi/Projects/rpiCarGps/
+StartupNotify=false
+</code></p>
+
+</body>
+</html>
