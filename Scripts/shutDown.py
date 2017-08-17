@@ -12,10 +12,13 @@ import time
 import RPi.GPIO as GPIO
 
 def shutDown(arg):
-    print "shut down : %s"%arg
-    # os.system('sudo shutdown -r now')
-    os.system('sudo poweroff')
+    global Pin
+    time.sleep(2)
+    if GPIO.input(Pin):
+        print "shut down : %s"%arg
+        os.system('sudo poweroff')
 
+    
 GPIO.setmode(GPIO.BCM)
 Pin = 5
 GPIO.setup(Pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -24,3 +27,4 @@ GPIO.add_event_detect(Pin, GPIO.RISING, callback = shutDown)
 #raw_input("wait ...")
 while 1:
     time.sleep(1)
+

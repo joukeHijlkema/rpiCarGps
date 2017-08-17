@@ -24,7 +24,7 @@ class Counter(Gtk.Box):
 
         if not title == "":
             w1=0.2*w
-            w2=0.3*w
+            w2=0.38*w
             w3=0.1*w
             self.Title  = Gtk.Label.new(title)
             self.Title.set_name("Title")

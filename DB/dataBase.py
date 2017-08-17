@@ -15,6 +15,7 @@ import threading
 from blinker import signal
 
 class dataBase(threading.Thread):
+    init=True
 
     def __init__(self,user,password,host,database):
         super(dataBase, self).__init__()
@@ -22,6 +23,10 @@ class dataBase(threading.Thread):
         self.pwd   = password
         self.host  = host
         self.db    = database
+        self.dstTot  = 0.0
+        self.dstTrip = 0.0
+        self.dstDay  = 0.0
+        self.init=True
 
     ## --------------------------------------------------------------
     ## Description : run the thread
@@ -43,9 +48,17 @@ class dataBase(threading.Thread):
                 print(err)
         else:
             print "connection OK"
-            self.Exec("UPDATE Temp SET totDistance=%f WHERE ID=1"%self.totDist(calc=True))
-            print "total distance calculated"
-            
+            self.dstDay  = self.dayDist(0)
+            #self.dstDay = self.GetOne("SELECT Value FROM Memory WHERE Id=1")
+            print "day distance OK"
+            #self.dstTrip = self.tripDist()
+            self.dstTrip = self.GetOne("SELECT Value FROM Memory WHERE Id=2")
+            print "trip distance OK"
+            #self.dstTot  = self.totDist()
+            self.dstTot = self.GetOne("SELECT Value FROM Memory WHERE Id=3")
+            print "total distance OK"
+            print "all distances calculated"
+            self.init=False
         return "running"
     ## --------------------------------------------------------------
     ## Description : Quit
@@ -55,31 +68,49 @@ class dataBase(threading.Thread):
     ## date   : 16-08-2017 14:08:07
     ## --------------------------------------------------------------
     def Quit (self):
-        self.cnx.close()
-        
+        self.cnx.close()        
+    ## --------------------------------------------------------------
+    ## Description : Put a value in the db
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 16-08-2017 14:08:07
+    ## --------------------------------------------------------------
     def Put(self,What,Values):
-        # print "add %s to %s"%(Values,What)
+        #print "add %s to %s"%(Values,What)
         while not self.cnx.is_connected():
             self.cnx.reconnect()
             # print "reconnecting to db"
         cursor = self.cnx.cursor()
         cursor.execute(What,Values)
-        # self.cnx.commit()
+        self.cnx.commit()
         cursor.close()
-
+    ## --------------------------------------------------------------
+    ## Description : Get one value
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 16-08-2017 14:08:07
+    ## --------------------------------------------------------------
     def GetOne(self,What):
         while not self.cnx.is_connected():
             self.cnx.reconnect()
         cursor = self.cnx.cursor()
         cursor.execute(What)
-        # self.cnx.commit()
         out =  cursor.fetchone()
+        try:
+            cursor.fetchall()  # fetch (and discard) remaining rows
+        except mysql.connector.errors.InterfaceError as ie:
+            if ie.msg == 'No result set to fetch from.':
+                # no problem, we were just at the end of the result set
+                pass
+            else:
+                raise
         cursor.close()
         if out==None:
             return 0
         else:
             return out[0]
-
     ## --------------------------------------------------------------
     ## Description :get
     ## NOTE :
@@ -88,18 +119,17 @@ class dataBase(threading.Thread):
     ## date   : 08-23-2017 22:23:39
     ## --------------------------------------------------------------
     def Get (self,What):
-        # print What
+        #print What
         while not self.cnx.is_connected():
             self.cnx.reconnect()
         cursor = self.cnx.cursor()
         cursor.execute(What)
         # self.cnx.commit()
         out = []
-        for c in cursor:
+        for c in cursor.fetchall():
             out.append(c)
         cursor.close()
         return out
-
     ## --------------------------------------------------------------
     ## Description : exec a query
     ## NOTE : 
@@ -108,12 +138,12 @@ class dataBase(threading.Thread):
     ## date   : 16-11-2017 14:11:36
     ## --------------------------------------------------------------
     def Exec (self,What):
+        print What
         while not self.cnx.is_connected():
             self.cnx.reconnect()
         cursor = self.cnx.cursor()
         cursor.execute(What)
         self.cnx.commit()
-        
     ## --------------------------------------------------------------
     ## Description : add data point
     ## NOTE : 
@@ -123,18 +153,23 @@ class dataBase(threading.Thread):
     ## --------------------------------------------------------------
     def addPoint (self,data):
         lastPoint  = self.Get("SELECT Lat,Lon FROM Gps ORDER BY id DESC LIMIT 1")
-        d          = 100.0
-        
+        d          = 10.0
         if len(lastPoint)!=0:
             d  = self.Distance(data["lat"],data["lon"],lastPoint[0][0],lastPoint[0][1])
-        if d>50.0:
+        if d>100.0:
             self.Put(("INSERT INTO Gps (Lat,Lon,Time) VALUES (%s,%s,%s)"),
                     (data["lat"],data["lon"],data["time"]))
-            dist = self.GetOne("SELECT totDistance FROM Temp WHERE ID=1")+d
-            self.Exec("UPDATE Temp SET totDistance=%f WHERE ID=1"%dist)
+
+            self.dstDay +=d
+            self.dstTrip+=d
+            self.dstTot +=d
+            
+            self.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (1,'Day',%s)"%self.dstDay)
+            self.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (2,'Trip',%s)"%self.dstTrip)
+            self.Exec("REPLACE INTO Memory (Id,What,Value) VALUES (3,'Total',%s)"%self.dstTot)
+
             return True
         return False
-
     ## --------------------------------------------------------------
     ## Description : Distance
     ## NOTE : 
@@ -143,6 +178,7 @@ class dataBase(threading.Thread):
     ## date   : 02-59-2017 10:59:34
     ## --------------------------------------------------------------
     def Distance (self,lat1,lon1,lat2,lon2):
+        #print "%s,%s->%s,%s"%(lat1,lon1,lat2,lon2)
         R = 6371e3
         f1 = math.radians(lat1)
         f2 = math.radians(lat2)
@@ -166,8 +202,8 @@ class dataBase(threading.Thread):
             for n2 in Nodes[1:]:
                 D+=self.NDistance(n1,n2)
                 n1=n2
+                #print "D=%s"%D
         return D
-
     ## --------------------------------------------------------------
     ## Description : calculate day distance
     ## NOTE : 
@@ -175,12 +211,11 @@ class dataBase(threading.Thread):
     ## Author : jouke hylkema
     ## date   : 02-20-2017 13:20:45
     ## --------------------------------------------------------------
-    def dayDist (self, *positional_parameters, **keyword_parameters):
-        date = "CURDATE()"
-        if 'back' in keyword_parameters:
-            date += "-%s"%keyword_parameters['back']
-        return self.SDistance(self.Get("SELECT Lat,Lon FROM `Gps` WHERE DATE(Time) = %s ORDER BY Id DESC"%date))
-
+    def dayDist (self, offset):
+        date = arrow.now().shift(days=-offset).date()
+        return self.SDistance(
+            self.Get("SELECT Lat,Lon FROM `Gps` WHERE DATE(Time) = '%s' ORDER BY Id DESC"%
+                     date))
     ## --------------------------------------------------------------
     ## Description : calculate total distance
     ## NOTE : 
@@ -189,12 +224,7 @@ class dataBase(threading.Thread):
     ## date   : 02-33-2017 13:33:26
     ## --------------------------------------------------------------
     def totDist (self,*positional_parameters, **keyword_parameters):
-        if 'calc' in keyword_parameters:
-            return self.SDistance(self.Get("SELECT Lat,Lon FROM `Gps`"))
-        else:
-            return self.GetOne("SELECT totDistance FROM Temp WHERE ID=1")
-        
-        
+        return self.SDistance(self.Get("SELECT Lat,Lon FROM `Gps`"))
     ## --------------------------------------------------------------
     ## Description : calculate trip distance
     ## NOTE : 
@@ -203,8 +233,7 @@ class dataBase(threading.Thread):
     ## date   : 02-33-2017 13:33:26
     ## --------------------------------------------------------------
     def tripDist (self):
-        return self.SDistance(self.Get("SELECT Gps.Lat,Gps.Lon FROM Gps, Temp  WHERE DATE(Gps.Time) >= DATE(Temp.tripStart)"))
-        
+        return self.SDistance(self.Get("SELECT Gps.Lat,Gps.Lon FROM Gps, Temp  WHERE DATE(Gps.Time) >= DATE(Temp.tripStart)"))                
     ## --------------------------------------------------------------
     ## Description : reset the trip
     ## NOTE : 
@@ -214,4 +243,4 @@ class dataBase(threading.Thread):
     ## --------------------------------------------------------------
     def resetTrip (self):
         print("DB : reset trip")
-        self.Exec("UPDATE Temp SET tripStart=DATE(CURDATE())")
+        self.Exec("UPDATE Temp SET tripStart=CURDATE()")

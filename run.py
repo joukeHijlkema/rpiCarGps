@@ -8,8 +8,9 @@
 #   - Initial Version 1.0
 #  =================================================
 ## ========= TODO =============
-## - Add altitude
+
 ## ============================
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GObject
@@ -28,6 +29,7 @@ data = {}
 data["GPS"]={}
 data["DB"]={}
 data["TEMP"]={}
+data["Init"]=True
 
 ## --------------------------------------------------------------
 ## Description : act on gps data
@@ -38,13 +40,14 @@ data["TEMP"]={}
 ## --------------------------------------------------------------
 def gotGpsData(gpsData):
     global data,db,win
-
+#    print gpsData
     data["GPS"] = gpsData
-    if db.addPoint(gpsData):
-        data["DB"]["dayDist"]  = db.dayDist(back=win.myDayDist.offset)
-        data["DB"]["tripDist"] = db.tripDist()
-        data["DB"]["totDist"]  = db.totDist()
-        print(data["DB"])
+    if db.addPoint(gpsData) or data["Init"]:
+        data["DB"]["dayDist"]  = db.dstDay
+        data["DB"]["tripDist"] = db.dstTrip
+        data["DB"]["totDist"]  = db.dstTot
+        #print(data["DB"])
+        data["Init"]=False
 
 ## --------------------------------------------------------------
 ## Description : got temperature reading
@@ -73,6 +76,8 @@ def timedUpdate ():
         signal("dayDist").send(data["DB"]["dayDist"])
         signal("tripDist").send(data["DB"]["tripDist"])
         signal("totDist").send(data["DB"]["totDist"])
+        signal("alt").send(data["GPS"]["alt"])
+        signal("rate").send(data["GPS"]["climb"])
     except:
         print "not all data worked"
     return True
@@ -102,20 +107,33 @@ def resetTrip (data):
     global db
     print("reset trip in run")
     db.resetTrip()
-
+## --------------------------------------------------------------
+## Description : day history
+## NOTE : 
+## -
+## Author : jouke hylkema
+## date   : 16-03-2017 14:03:11
+## --------------------------------------------------------------
+def dayHist(offset):
+    data["DB"]["dayDist"]  = db.dayDist(offset)    
+    
 real=("armv7l" in os.uname()[4])
 rootPath = os.path.dirname(os.path.realpath(sys.argv[0]))
-print "root = %s"%rootPath
+#print "root = %s"%rootPath
 win = MainWindow(1024,600,"%s/GTK/Styles.css"%rootPath,real)
-time.sleep(1)
+#time.sleep(1)
     
 # GPS
 myGps = Gps(real)
 myGps.start()
-
+while myGps.init:
+    time.sleep(0.1)
+    
 # Database
 db = dataBase("Jouke","!Jouke","localhost","busGps")
 db.start()
+while db.init:
+    time.sleep(0.1)
 
 # Temperature
 temp = myTemp(real)
@@ -124,15 +142,20 @@ temp.start()
 #Signaling
 gpsData = signal('Gps')
 gpsData.connect(gotGpsData)
+
 tempData = signal("Temp")
 tempData.connect(gotTempData)
+
 resetTripSignal = signal("tripDist_return")
 resetTripSignal.connect(resetTrip)
+
+backDayTot = signal("dayTot")
+backDayTot.connect(dayHist)
 
 win.connect("delete-event",Quit)
 win.quitButton.connect("clicked", Quit)
 
-GObject.timeout_add(1000, timedUpdate)
+GObject.timeout_add(100, timedUpdate)
 
 print "start mainloop"
 Gtk.main()
