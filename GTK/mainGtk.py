@@ -14,6 +14,8 @@ from speedMeter import speedMeter
 from dayDist import dayDist
 from tripDist import tripDist
 from totDist import totDist
+from Altitude import Altitude
+from Rate import Rate
 from Time import Time
 
 class mainGtk(Gtk.Window):
@@ -34,6 +36,8 @@ class mainGtk(Gtk.Window):
         self.myDayDist     = dayDist(self,320,20,"dayDist","Jour:")
         self.mytripDist    = tripDist(self,320,20,"tripDist","Trip:")
         self.myTotDist     = totDist(self,320,20,"totDist","Total:")
+        self.myAlt         = Altitude(self,320,20,"alt","Alt:")
+        self.myRate        = Rate(self,320,20,"rate","Rate:")
         self.myTime        = Time(self,320,20,"Time","")
         self.myNavit       = Navit(self,700,600)
         self.quitButton    = Gtk.Button.new_with_label("quit")
@@ -47,9 +51,11 @@ class mainGtk(Gtk.Window):
         grid.attach(self.myDayDist,0,1,1,1)
         grid.attach(self.mytripDist,0,2,1,1)
         grid.attach(self.myTotDist,0,3,1,1)
-        grid.attach(self.myTime,0,4,1,1)
-        grid.attach(self.quitButton,0,5,1,1)
-        grid.attach(self.myNavit,1,0,1,6)
+        grid.attach(self.myAlt,0,4,1,1)
+        grid.attach(self.myRate,0,5,1,1)
+        grid.attach(self.myTime,0,6,1,1)
+        grid.attach(self.quitButton,0,7,1,1)
+        grid.attach(self.myNavit,1,0,1,8)
 
         self.myNavit.start()
 

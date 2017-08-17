@@ -9,6 +9,7 @@
 #  =================================================
 from gi.repository import Gtk
 from Counter import Counter
+from blinker import signal
 
 class dayDist(Counter):
     def __init__(self,parent,w,h,name,title):
@@ -29,6 +30,7 @@ class dayDist(Counter):
         self.offset = 0
         self.back.connect("clicked",self.changeOffset,1)
         self.reset.connect("clicked",self.changeOffset,0)
+        self.backSignal  = signal('dayTot')
 
     ## --------------------------------------------------------------
     ## Description : chage the offset value
@@ -46,6 +48,7 @@ class dayDist(Counter):
             self.offset=0
             self.color = "blue"
             self.back.set_label("-")
+        self.backSignal.send(self.offset)
     ## --------------------------------------------------------------
     ## Description : update la vitesse
     ## NOTE : 

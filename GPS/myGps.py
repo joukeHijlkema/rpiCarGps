@@ -13,9 +13,11 @@ from blinker import signal
 import time
 import arrow
 import random
+import os
 
 class Gps(threading.Thread):
     data    = {}
+    init=True
     def __init__(self,real):
         "listen to gps data and emit some if anything new arrives"
         super(Gps, self).__init__()
@@ -60,9 +62,15 @@ class Gps(threading.Thread):
                     # print(report)
                     if report['class'] == 'TPV':
                         self.data.clear()
-                        for i in ['time','speed','lon','lat']:
+                        for i in ['time','speed','lon','lat','alt','climb']:
                             if hasattr(report, i):
                                 exec("self.data['{0}']=report.{0}".format(i))
+                        if self.init:
+                            try:
+                                os.system("sudo date -s %s"%report.time)
+                                self.init=False
+                            except:
+                                print "waiting for time"
                         self.newData.send(self.data)
                 except KeyError:
                     pass

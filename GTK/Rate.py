@@ -11,28 +11,22 @@ from gi.repository import Gtk
 from Counter import Counter
 import arrow
 
-class Time(Counter):
+class Rate(Counter):
     def __init__(self,parent,w,h,name,title):
         "docstring"
-        super(Time, self).__init__(parent,w,h,name,title)
+        super(Rate, self).__init__(parent,w,h,name,title)
 
-        self.units = "°C"
+        self.units = "m/s"
         self.update("0")
 
     ## --------------------------------------------------------------
-    ## Description : update la vitesse
+    ## Description : update altitude
     ## NOTE : 
     ## -
     ## Author : jouke hylkema
     ## date   : 20-04-2017 14:04:19
     ## --------------------------------------------------------------
     def update (self,value):
-        v = value.split("#")
-        t = arrow.get(v[0]).to('Europe/Paris')
-        if len(v)>1:
-            temp = float(v[1])
-        else:
-            temp = 0.0
-        self.Value.set_markup("<span font_desc=\"22\">%s - %3.1f</span>"%(t.format('ddd D/M HH:mm'),temp))
+        self.Value.set_markup("<span font_desc=\"30\">%s </span>"%value)
         self.Units.set_markup("<span font_desc=\"20\">%s</span>"%self.units)
         return True
