@@ -1,4 +1,4 @@
-@import url("Styles.css");
+@import url("./Styles.css");
 
 .Default {
     background-color:#CFCFCF;
@@ -13,6 +13,7 @@
 }
 
 #speedMeter #Value{
-    color:#FF4500;
+    /* color:#FF4500; */
+    color:red;
 }
     

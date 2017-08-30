@@ -17,7 +17,7 @@ class Counter(Gtk.Box):
     def __init__(self,parent,*args,**kw):
         "docstring"
         super(Counter, self).__init__()
-        print(kw)
+        # print(kw)
 
         self.set_hexpand(True)
         self.set_valign(Gtk.Align.END)

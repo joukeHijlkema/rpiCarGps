@@ -68,7 +68,9 @@ class dataBase(threading.Thread):
     ## date   : 16-08-2017 14:08:07
     ## --------------------------------------------------------------
     def Quit (self):
-        self.cnx.close()        
+        print("Quit DB ... ")
+        self.cnx.close()
+        print("done")
     ## --------------------------------------------------------------
     ## Description : Put a value in the db
     ## NOTE : 

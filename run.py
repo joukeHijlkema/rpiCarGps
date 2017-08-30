@@ -112,10 +112,14 @@ def timedUpdate ():
 ## date   : 03-05-2017 10:05:20
 ## --------------------------------------------------------------
 def Quit(*args):
-    global db,tempOn
+    global db,tempOn,myGps,temp
+    print("Quitting")
     db.Quit()
+    print(myGps)
     myGps.Doit=False
-    if tempOn: temp.Doit=False
+    if tempOn:
+        print("kill temp")
+        temp.Doit=False
     Gtk.main_quit()
 
 ## --------------------------------------------------------------

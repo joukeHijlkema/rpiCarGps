@@ -48,8 +48,11 @@ class mainWindow(Gtk.Window):
         W2 = config.getint("Items","GpsWidth")
         W1 = W-W2
         window   = self.builder.get_object("mainWindow")
-        window.set_default_size(W,H)
-        window.set_size_request(W,H)
+        if config.getboolean("Items","Fullscreen"):
+            window.fullscreen()
+        else:
+            window.set_default_size(W,H)
+            window.set_size_request(W,H)
         navCont  = self.builder.get_object("navitContainer")
         myNavit  = gtkNavit(None,W2,H)
         navCont.add(myNavit)
