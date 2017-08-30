@@ -17,6 +17,9 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GObject
+print(Gtk.get_major_version ())
+print(Gtk.get_minor_version ())
+print(Gtk.get_micro_version ())
 from blinker import signal
 import configparser
 
