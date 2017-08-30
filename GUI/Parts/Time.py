@@ -27,16 +27,14 @@ class Time(Counter):
     ## date   : 20-04-2017 14:04:19
     ## --------------------------------------------------------------
     def update (self,value):
-        print("in time %s"%value)
+        # print("in time %s"%value)
         v = value.split("#")
-        print(v[0])
         t = arrow.get(v[0]).to('Europe/Paris')
-        print(t)
         if len(v)>1:
-            data = "{:<s} - {:>3.1f}".format(t.format('ddd D/M HH:mm'),float(v[1]))
+            data = "{:<s} - {:>3.1f} ".format(t.format('ddd D/M HH:mm'),float(v[1]))
         else:
             data = "{:<s}".format(t.format('ddd D/M HH:mm'))
             self.units = ""
-        self.Value.set_label(":<s"%data)
+        self.Value.set_label("{:<s}".format(data))
         self.Units.set_label("%s"%self.units)
         return True

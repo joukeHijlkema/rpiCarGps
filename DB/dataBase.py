@@ -119,7 +119,7 @@ class dataBase(threading.Thread):
     ## date   : 08-23-2017 22:23:39
     ## --------------------------------------------------------------
     def Get (self,What):
-        print(What)
+        # print(What)
         while not self.cnx.is_connected():
             self.cnx.reconnect()
         cursor = self.cnx.cursor()

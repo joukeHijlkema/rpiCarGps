@@ -29,9 +29,9 @@ from GPS.myGps import Gps
 from DB.dataBase import dataBase
 if config.getboolean("Modules","temp"):
     from TEMP.myTemp import myTemp
-    self.tempOn = True
+    tempOn = True
 else:
-    self.tempOn = False
+    tempOn = False
 
 import os
 import sys
@@ -80,11 +80,11 @@ def gotTempData (tempData):
 ## date   : 03-42-2017 10:42:09
 ## --------------------------------------------------------------
 def timedUpdate ():
-    global data
+    global data,tempOn
     # print(data)
     wtd                = {}
     wtd["speedMeter"]  = data["GPS"]["speed"] if "speed" in data["GPS"] else "skip"
-    if self.tempOn:
+    if tempOn:
         wtd["Time"]        = "{}#{}".format(data["GPS"]["time"],data["TEMP"]["Value"]) if "time" in data["GPS"] and "Value" in data["TEMP"] else "skip"
     else:
         wtd["Time"]        = "{}".format(data["GPS"]["time"]) if "time" in data["GPS"] else "skip"
@@ -112,10 +112,10 @@ def timedUpdate ():
 ## date   : 03-05-2017 10:05:20
 ## --------------------------------------------------------------
 def Quit(*args):
-    global db
+    global db,tempOn
     db.Quit()
     myGps.Doit=False
-    if self.tempOn: temp.Doit=False
+    if tempOn: temp.Doit=False
     Gtk.main_quit()
 
 ## --------------------------------------------------------------
@@ -160,7 +160,7 @@ while db.init:
     time.sleep(0.1)
 
 # Temperature
-if self.tempOn:
+if tempOn:
     temp = myTemp(real)
     temp.start()
 
@@ -168,7 +168,7 @@ if self.tempOn:
 gpsData = signal('Gps')
 gpsData.connect(gotGpsData)
 
-if self.tempOn:
+if tempOn:
     tempData = signal("Temp")
     tempData.connect(gotTempData)
 
