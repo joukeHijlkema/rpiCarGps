@@ -45,7 +45,7 @@ class mainWindow(Gtk.Window):
 
         window   = self.builder.get_object("mainWindow")
         navCont  = self.builder.get_object("navitContainer")
-        myNavit  = gtkNavit(None,700,600)
+        myNavit  = gtkNavit(None,config.getint("Items","Width"),config.getint("Items","Height"))
         navCont.add(myNavit)
 
         ## Counters

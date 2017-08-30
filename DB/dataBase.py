@@ -45,7 +45,7 @@ class dataBase(threading.Thread):
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
                 print("Database does not exist")
             else:
-                print(err)
+                print("Database: {}".format(err))
         else:
             print("connection OK")
             self.dstDay  = self.dayDist(0)

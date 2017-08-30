@@ -86,15 +86,17 @@ class Gps(threading.Thread):
                         if new_data:
                             self.data.clear()
                             self.data_stream.unpack(new_data)
+                            # print(self.data_stream.TPV)
                             for i in ['time','speed','lon','lat','alt','climb']:
-                                self.data[i]=data_stream.TPV[i]
-                        if self.init:
-                            try:
-                                os.system("sudo date -s %s"%data_stream.TPV["time"])
-                                self.init=False
-                            except:
-                                print("waiting for time")
-                        self.newData.send(self.data)
+                                self.data[i]=self.data_stream.TPV[i]
+                            if self.init:
+                                try:
+                                    os.system("sudo date -s %s"%self.data_stream.TPV["time"])
+                                    self.init=False
+                                except:
+                                    print("waiting for time")
+                            self.newData.send(self.data)
+      
                 except KeyError:
                     pass
                 except KeyboardInterrupt:
