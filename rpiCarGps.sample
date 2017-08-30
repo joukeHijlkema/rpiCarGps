@@ -1,0 +1,34 @@
+# Attention : no uppercase
+[Items]
+Active:["speedMeter","dayDist","tripDist","totDist","Altitude","Rate","Time"]
+
+[speedMeter]
+name:"speedMeter"
+format:"{:<3d}"
+
+[dayDist]
+name:"dayDist"
+title:"day  : "
+
+[tripDist]
+name:"tripDist"
+title:"Trip : "
+
+[totDist]
+name:"totDist"
+title:"Total : "
+
+[Altitude]
+name:"Altitude"
+title:"Altitude : "
+
+[Rate]
+name:"Rate"
+title:"Rate : "
+floatdown:"1"
+
+[Time]
+name:"Time"
+
+[Modules]
+temp: yes

@@ -47,6 +47,10 @@ git clone https://github.com/joukeHijlkema/rpiCarGps.git <gpsDir>
 	mysql> CREATE USER 'Jouke'@'localhost' IDENTIFIED BY '!Jouke';
 	mysql> GRANT SELECT, INSERT, UPDATE, DELETE ON `busGps`.* TO 'Jouke'@'localhost';
 
+## the config file
+To avoid trashing the config file when pulling from git there is a sample file called rpiCarGps.sample in the root directory.
+copy this file to <gpsDir>/rpiCarGps.cfg
+
 
 ## switch off screen blanking
 	change two settings in /etc/kbd/config 
