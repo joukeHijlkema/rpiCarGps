@@ -64,7 +64,7 @@ class Gps(threading.Thread):
                 self.newData.send(self.data)
                 time.sleep(1)
         else:
-            while self.Doit:
+            while self.Doit==True:
                 try:
                     # report = self.session.next()
                     # # Wait for a 'TPV' report and display the current time
@@ -83,6 +83,7 @@ class Gps(threading.Thread):
                     #             print("waiting for time")
                     #     self.newData.send(self.data)
                     for new_data in self.gps_socket:
+                        if not self.Doit : break
                         if new_data:
                             self.data.clear()
                             self.data_stream.unpack(new_data)
@@ -90,12 +91,14 @@ class Gps(threading.Thread):
                             for i in ['time','speed','lon','lat','alt','climb']:
                                 self.data[i]=self.data_stream.TPV[i]
                             if self.init:
-                                try:
-                                    os.system("sudo date -s %s"%self.data_stream.TPV["time"])
-                                    self.init=False
-                                except:
-                                    print("waiting for time")
-                            self.newData.send(self.data)
+                                if self.data_stream.TPV["time"] != "n/a":
+                                    try:
+                                        os.system("sudo date -s %s"%self.data_stream.TPV["time"])
+                                        self.init=False
+                                    except:
+                                        print("waiting for time")
+                            else:
+                                self.newData.send(self.data)
       
                 except KeyError:
                     pass
@@ -103,4 +106,6 @@ class Gps(threading.Thread):
                     quit()
                 except StopIteration:
                     self.session = None
+
+        print("myGps quited")
     
