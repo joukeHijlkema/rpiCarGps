@@ -43,9 +43,15 @@ class mainWindow(Gtk.Window):
 
         self.builder.connect_signals(handlers)
 
+        W = config.getint("Items","Width")
+        H = config.getint("Items","Height")
+        W2 = config.getint("Items","GpsWidth")
+        W1 = W-W2
         window   = self.builder.get_object("mainWindow")
+        window.set_default_size(W,H)
+        window.set_size_request(W,H)
         navCont  = self.builder.get_object("navitContainer")
-        myNavit  = gtkNavit(None,config.getint("Items","Width"),config.getint("Items","Height"))
+        myNavit  = gtkNavit(None,W2,H)
         navCont.add(myNavit)
 
         ## Counters
@@ -53,7 +59,7 @@ class mainWindow(Gtk.Window):
         
         for i in eval(config.get("Items","Active")):
             print("doing %s"%i)
-            args=[]
+            args=["w=%s"%W1]
             for kw in config.items(i):
                 args.append("{key}={val}".format(key=kw[0],val=kw[1]))
             
@@ -63,7 +69,7 @@ class mainWindow(Gtk.Window):
             ))
             butCont.add(self.items[i])
 
-        self.setStyle("GUI/Styles/dayStyles.css")
+        self.setStyle("GUI/Styles/%s/dayStyles.css"%config.get("Items","Config"))
         
         window.show_all()
         myNavit.start()
@@ -114,10 +120,10 @@ class mainWindow(Gtk.Window):
         if self.mode=="Day":
             print("switch to night")
             navit.set_layout("Car-dark")
-            self.setStyle("GUI/Styles/nightStyles.css")
+            self.setStyle("GUI/Styles/%s/nightStyles.css"%config.get("Items","Config"))
             self.mode  = "Night"
         else:
             print("switch to day")
             navit.set_layout("Car")
-            self.setStyle("GUI/Styles/dayStyles.css")
+            self.setStyle("GUI/Styles/%s/dayStyles.css"%config.get("Items","Config"))
             self.mode  = "Day"

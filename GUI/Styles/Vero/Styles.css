@@ -1,0 +1,30 @@
+* {
+    /* debug */
+    /* border: 1px solid; */
+}
+
+#Title {
+    font-size:10px;
+}    
+
+#Value {
+    padding:0px 10px 0px 10px;
+    font-size:10px;
+}
+
+#Units {
+    font-size:10px;
+    padding:0px 10px 0px 10px;
+}
+
+#speedMeter #Value{
+    font-size:55px;
+}
+
+#Time #Value {
+    font-size:15px;
+}
+
+button {
+    font-size:20px
+}

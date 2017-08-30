@@ -4,12 +4,10 @@
   <requires lib="gtk+" version="3.12"/>
   <object class="GtkWindow" id="mainWindow">
     <property name="name">mainWindow</property>
-    <property name="width_request">1024</property>
-    <property name="height_request">600</property>
     <property name="can_focus">False</property>
     <property name="valign">start</property>
     <property name="resizable">False</property>
-    <property name="default_width">1024</property>
+    <property name="default_width">800</property>
     <property name="default_height">600</property>
     <property name="decorated">False</property>
     <child>
@@ -19,16 +17,16 @@
         <property name="baseline_position">top</property>
         <child>
           <object class="GtkBox" id="buttonContainer">
-            <property name="width_request">324</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="hexpand">False</property>
+            <property name="hexpand">True</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkBox" id="box3">
                 <property name="height_request">50</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="valign">baseline</property>
                 <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkButton" id="nightDayButton">
@@ -37,6 +35,7 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="yalign">0.54000002145767212</property>
+                    <property name="always_show_image">True</property>
                     <signal name="clicked" handler="onToggleNightDay" swapped="no"/>
                   </object>
                   <packing>
@@ -79,8 +78,6 @@
         <child>
           <object class="GtkFrame" id="navitContainer">
             <property name="name">navitContainer</property>
-            <property name="width_request">700</property>
-            <property name="height_request">600</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label_xalign">0</property>
