@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 #  =================================================
@@ -8,7 +8,10 @@
 #   - Initial Version 1.0
 #  =================================================
 ## ========= TODO =============
-
+# - average speed
+# - distance per tank, feul consomption
+# - move to python 3
+# - save position on quit
 ## ============================
 
 import gi
@@ -16,10 +19,18 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GObject
 from blinker import signal
 
-from GTK.mainGtk import mainGtk as MainWindow
+config = configparser.ConfigParser()
+config.read("rpiCarGps.cfg")
+
+# from GTK.mainGtk import mainGtk as MainWindow
+from GUI.mainWindow import mainWindow as MainWindow
 from GPS.myGps import Gps
 from DB.dataBase import dataBase
-from TEMP.myTemp import myTemp
+if config.getboolean("Modules","temp"):
+    from TEMP.myTemp import myTemp
+    self.tempOn = True
+else:
+    self.tempOn = False
 
 import os
 import sys
@@ -40,13 +51,12 @@ data["Init"]=True
 ## --------------------------------------------------------------
 def gotGpsData(gpsData):
     global data,db,win
-#    print gpsData
+    # print(gpsData)
     data["GPS"] = gpsData
     if db.addPoint(gpsData) or data["Init"]:
         data["DB"]["dayDist"]  = db.dstDay
         data["DB"]["tripDist"] = db.dstTrip
         data["DB"]["totDist"]  = db.dstTot
-        #print(data["DB"])
         data["Init"]=False
 
 ## --------------------------------------------------------------
@@ -58,7 +68,7 @@ def gotGpsData(gpsData):
 ## --------------------------------------------------------------
 def gotTempData (tempData):
     global data
-    # print "temp = %s C"%tempData
+    # print("temp = %s C"%tempData)
     data["TEMP"]["Value"] = tempData
     
 ## --------------------------------------------------------------
@@ -70,16 +80,27 @@ def gotTempData (tempData):
 ## --------------------------------------------------------------
 def timedUpdate ():
     global data
-    try:
-        signal("speedMeter").send(data["GPS"]["speed"])
-        signal("Time").send("%s#%s"%(data["GPS"]["time"],data["TEMP"]["Value"]))
-        signal("dayDist").send(data["DB"]["dayDist"])
-        signal("tripDist").send(data["DB"]["tripDist"])
-        signal("totDist").send(data["DB"]["totDist"])
-        signal("alt").send(data["GPS"]["alt"])
-        signal("rate").send(data["GPS"]["climb"])
-    except:
-        print "not all data worked"
+    # print(data)
+    wtd                = {}
+    wtd["speedMeter"]  = data["GPS"]["speed"] if "speed" in data["GPS"] else "skip"
+    if self.tempOn:
+        wtd["Time"]        = "{}#{}".format(data["GPS"]["time"],data["TEMP"]["Value"]) if "time" in data["GPS"] and "Value" in data["TEMP"] else "skip"
+    else:
+        wtd["Time"]        = "{}".format(data["GPS"]["time"]) if "time" in data["GPS"] else "skip"
+    wtd["dayDist"]     = data["DB"]["dayDist"] if "dayDist" in data["DB"] else "skip"   
+    wtd["tripDist"]    = data["DB"]["tripDist"] if "tripDist" in data["DB"] else "skip"   
+    wtd["totDist"]     = data["DB"]["totDist"] if "totDist" in data["DB"] else "skip"    
+    wtd["Altitude"]    = data["GPS"]["alt"] if "alt" in data["GPS"] else "skip"    
+    wtd["Rate"]        = data["GPS"]["climb"] if "climb" in data["GPS"] else "skip"     
+
+    for what in wtd:
+        if wtd[what]=="skip": continue
+        try:
+            # print("what={}, value={}".format(what,wtd[what]))
+            signal(what).send(wtd[what])
+        except:
+            # print("{} did not work".format(what))
+            pass
     return True
 
 ## --------------------------------------------------------------
@@ -93,7 +114,7 @@ def Quit(*args):
     global db
     db.Quit()
     myGps.Doit=False
-    temp.Doit=False
+    if self.tempOn: temp.Doit=False
     Gtk.main_quit()
 
 ## --------------------------------------------------------------
@@ -107,6 +128,7 @@ def resetTrip (data):
     global db
     print("reset trip in run")
     db.resetTrip()
+    
 ## --------------------------------------------------------------
 ## Description : day history
 ## NOTE : 
@@ -120,7 +142,8 @@ def dayHist(offset):
 real=("armv7l" in os.uname()[4])
 rootPath = os.path.dirname(os.path.realpath(sys.argv[0]))
 #print "root = %s"%rootPath
-win = MainWindow(1024,600,"%s/GTK/Styles.css"%rootPath,real)
+# win = MainWindow(1024,600,"%s/GTK/Styles.css"%rootPath,real)
+win = MainWindow()
 #time.sleep(1)
     
 # GPS
@@ -136,15 +159,17 @@ while db.init:
     time.sleep(0.1)
 
 # Temperature
-temp = myTemp(real)
-temp.start()
+if self.tempOn:
+    temp = myTemp(real)
+    temp.start()
 
 #Signaling
 gpsData = signal('Gps')
 gpsData.connect(gotGpsData)
 
-tempData = signal("Temp")
-tempData.connect(gotTempData)
+if self.tempOn:
+    tempData = signal("Temp")
+    tempData.connect(gotTempData)
 
 resetTripSignal = signal("tripDist_return")
 resetTripSignal.connect(resetTrip)
@@ -153,11 +178,12 @@ backDayTot = signal("dayTot")
 backDayTot.connect(dayHist)
 
 win.connect("delete-event",Quit)
-win.quitButton.connect("clicked", Quit)
+# win.quitButton.connect("clicked", Quit)
+win.builder.get_object("quitButton").connect("clicked", Quit)
 
 GObject.timeout_add(100, timedUpdate)
 
-print "start mainloop"
+print("start mainloop")
 Gtk.main()
 
 

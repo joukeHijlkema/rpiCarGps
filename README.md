@@ -31,10 +31,18 @@ A replacement for the speed indicator of my old van (and it does GPS and a lot m
 	touch /boot/ssh
 
 ## dependencies
-	sudo apt install navit* mysql-server python-arrow gpsd gpsd-clients python-gps python-mysql.connector
+	sudo apt install navit* mysql-server gpsd gpsd-clients git
+	sudo -H pip3 install gps3 mysql-connector==2.1.6 arrow
+	
+## git repository but you probably already have it if you're reading this
 
-## for the database:
+``` script
+git clone https://github.com/joukeHijlkema/rpiCarGps.git <gpsDir>
+```
+
+## for the database (the file lives in th DB directory)
 	mysql> CREATE DATABASE busGps;
+	mysql> USE busGps;
 	mysql> SOURCE busGps.sql;
 	mysql> CREATE USER 'Jouke'@'localhost' IDENTIFIED BY '!Jouke';
 	mysql> GRANT SELECT, INSERT, UPDATE, DELETE ON `busGps`.* TO 'Jouke'@'localhost';
@@ -51,16 +59,9 @@ A replacement for the speed indicator of my old van (and it does GPS and a lot m
 	@xset -dpms
 	@xset s noblank
 
-
-## git repository
-
-``` script
-git clone https://github.com/joukeHijlkema/rpiCarGps.git <gpsDir>
-```
-
 ## Maps
 - Copy all your maps to /home/pi/Maps/
-- Copy <gpsDir>/GPS/myNavit.xml to ~/.navit/navit.xml
+- Copy or link <gpsDir>/GPS/myNavit.xml to ~/.navit/navit.xml
 
 ## to auto start
 put a file called rpiGps.desktop in ~/.config/autostart containing :
@@ -80,3 +81,5 @@ Path=/home/pi/Projects/rpiCarGps/
 StartupNotify=false
 ```
 
+## Python
+I switched to glade for the GUI. The catalog file is in GLADE/CATALOG

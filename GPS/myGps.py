@@ -8,7 +8,8 @@
 #   - Initial Version 1.0
 #  =================================================
 import threading
-import gps
+# import gps
+from gps3 import gps3
 from blinker import signal
 import time
 import arrow
@@ -25,8 +26,14 @@ class Gps(threading.Thread):
         self.test = not real
         
         # Listen on port 2947 (gpsd) of localhost
-        self.session  = gps.gps("localhost", "2947")
-        self.session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+        # self.session  = gps.gps("localhost", "2947")
+        # self.session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+        
+        self.gps_socket = gps3.GPSDSocket()
+        self.data_stream = gps3.DataStream()
+        self.gps_socket.connect()
+        self.gps_socket.watch()
+        
         self.newData  = signal('Gps')
         self.Doit     = True
 
@@ -42,35 +49,51 @@ class Gps(threading.Thread):
     ## --------------------------------------------------------------
     def run (self):
         if self.test==True:
-            print "test run"
+            print("test run")
+            self.init=False
             while self.Doit:
                 self.data.clear()
                 self.data['speed'] = random.randrange(0,100,1)
-                self.data['time']  = arrow.now().format("YY-MM-DD HH:mm:ss")
+                self.data['time']  = arrow.utcnow().format("YYYY-MM-DD HH:mm:ss")
                 self.dummyLon+=0.001
                 self.dummyLat+=0.001
                 self.data['lon']   = self.dummyLon
                 self.data['lat']   = self.dummyLat
+                self.data['alt']    = random.randrange(0,1000,1)
+                self.data['climb']  = random.randrange(-10,10,1)
                 self.newData.send(self.data)
                 time.sleep(1)
         else:
             while self.Doit:
                 try:
-                    report = self.session.next()
-                    # Wait for a 'TPV' report and display the current time
-                    # To see all report data, uncomment the line below
-                    # print(report)
-                    if report['class'] == 'TPV':
-                        self.data.clear()
-                        for i in ['time','speed','lon','lat','alt','climb']:
-                            if hasattr(report, i):
-                                exec("self.data['{0}']=report.{0}".format(i))
+                    # report = self.session.next()
+                    # # Wait for a 'TPV' report and display the current time
+                    # # To see all report data, uncomment the line below
+                    # # print(report)
+                    # if report['class'] == 'TPV':
+                    #     self.data.clear()
+                    #     for i in ['time','speed','lon','lat','alt','climb']:
+                    #         if hasattr(report, i):
+                    #             exec("self.data['{0}']=report.{0}".format(i))
+                    #     if self.init:
+                    #         try:
+                    #             os.system("sudo date -s %s"%report.time)
+                    #             self.init=False
+                    #         except:
+                    #             print("waiting for time")
+                    #     self.newData.send(self.data)
+                    for new_data in self.gps_socket:
+                        if new_data:
+                            self.data.clear()
+                            self.data_stream.unpack(new_data)
+                            for i in ['time','speed','lon','lat','alt','climb']:
+                                self.data[i]=data_stream.TPV[i]
                         if self.init:
                             try:
-                                os.system("sudo date -s %s"%report.time)
+                                os.system("sudo date -s %s"%data_stream.TPV["time"])
                                 self.init=False
                             except:
-                                print "waiting for time"
+                                print("waiting for time")
                         self.newData.send(self.data)
                 except KeyError:
                     pass

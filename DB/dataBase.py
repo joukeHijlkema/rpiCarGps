@@ -47,17 +47,17 @@ class dataBase(threading.Thread):
             else:
                 print(err)
         else:
-            print "connection OK"
+            print("connection OK")
             self.dstDay  = self.dayDist(0)
             #self.dstDay = self.GetOne("SELECT Value FROM Memory WHERE Id=1")
-            print "day distance OK"
+            print("day distance OK")
             #self.dstTrip = self.tripDist()
             self.dstTrip = self.GetOne("SELECT Value FROM Memory WHERE Id=2")
-            print "trip distance OK"
+            print("trip distance OK")
             #self.dstTot  = self.totDist()
             self.dstTot = self.GetOne("SELECT Value FROM Memory WHERE Id=3")
-            print "total distance OK"
-            print "all distances calculated"
+            print("total distance OK")
+            print("all distances calculated")
             self.init=False
         return "running"
     ## --------------------------------------------------------------
@@ -77,10 +77,10 @@ class dataBase(threading.Thread):
     ## date   : 16-08-2017 14:08:07
     ## --------------------------------------------------------------
     def Put(self,What,Values):
-        #print "add %s to %s"%(Values,What)
+        #print("add %s to %s"%(Values,What))
         while not self.cnx.is_connected():
             self.cnx.reconnect()
-            # print "reconnecting to db"
+            # print("reconnecting to db")
         cursor = self.cnx.cursor()
         cursor.execute(What,Values)
         self.cnx.commit()
@@ -119,7 +119,7 @@ class dataBase(threading.Thread):
     ## date   : 08-23-2017 22:23:39
     ## --------------------------------------------------------------
     def Get (self,What):
-        #print What
+        print(What)
         while not self.cnx.is_connected():
             self.cnx.reconnect()
         cursor = self.cnx.cursor()
@@ -138,7 +138,7 @@ class dataBase(threading.Thread):
     ## date   : 16-11-2017 14:11:36
     ## --------------------------------------------------------------
     def Exec (self,What):
-        print What
+        # print(What)
         while not self.cnx.is_connected():
             self.cnx.reconnect()
         cursor = self.cnx.cursor()
@@ -178,7 +178,7 @@ class dataBase(threading.Thread):
     ## date   : 02-59-2017 10:59:34
     ## --------------------------------------------------------------
     def Distance (self,lat1,lon1,lat2,lon2):
-        #print "%s,%s->%s,%s"%(lat1,lon1,lat2,lon2)
+        #print("%s,%s->%s,%s"%(lat1,lon1,lat2,lon2))
         R = 6371e3
         f1 = math.radians(lat1)
         f2 = math.radians(lat2)
@@ -194,15 +194,15 @@ class dataBase(threading.Thread):
     def NDistance(self,n1,n2):
         return self.Distance(n1[0],n1[1],n2[0],n2[1])
     def SDistance(self,Nodes):
-	if len(Nodes) < 2:
-	    D = 0.0
+        if len(Nodes) < 2:
+            D = 0.0
         else:
-	    n1 = Nodes[0]
+            n1 = Nodes[0]
             D  = 0.0
             for n2 in Nodes[1:]:
                 D+=self.NDistance(n1,n2)
                 n1=n2
-                #print "D=%s"%D
+                #print("D=%s"%D)
         return D
     ## --------------------------------------------------------------
     ## Description : calculate day distance

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 #  =================================================
@@ -14,11 +14,13 @@ from lxml import etree
 from shapely.geometry import Point, LineString, Polygon
 from geopy.distance import vincenty as dist
 
-db = dataBase("Jouke","!Jouke","192.168.1.23","busGps")
+db = dataBase("Jouke","!Jouke","localhost","busGps")
 db.start()
-time.sleep(1) ## wait for db connection
+while db.init:
+    time.sleep(0.1)
 
-data = db.Get("SELECT * from Gps ORDER BY id")
+data = db.Get("SELECT Id,Lat,Lon,Time from Gps ORDER BY id")
+# print(data)
 
 # Create the root KML object
 root = kml.KML()
@@ -33,14 +35,14 @@ doc.append(f)
 
 lon1 = data[0][2]
 lat1 = data[0][1]
-p           = kml.Placemark(ns, "%s"%d[0],"%s"%d[3], 'description')
-p.geometry  = Point(lon1,lon2)
+p           = kml.Placemark(ns, "0","%s"%data[0][3], 'description')
+p.geometry  = Point(lon1,lat1)
 f.append(p)
 
 for d in data:
     lon2 = data[0][2]
     lat2 = data[0][1]
-    
+    # print(d)
     if dist((lon1,lat1),(lon2,lat2)).kilometers>10: 
         p           = kml.Placemark(ns, "%s"%d[0],"%s"%d[3], 'description')
         p.geometry  = Point(lon2,lat2)
