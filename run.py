@@ -77,7 +77,9 @@ def timedUpdate ():
         signal("tripDist").send(data["DB"]["tripDist"])
         signal("totDist").send(data["DB"]["totDist"])
         signal("alt").send(data["GPS"]["alt"])
-        signal("rate").send(data["GPS"]["climb"])
+        #signal("rate").send(data["GPS"]["climb"])
+        if data["GPS"]["speed"] != 0: 
+            signal("rate").send("%2.0f"%(100*data["GPS"]["climb"]/data["GPS"]["speed"]))
     except:
         print "not all data worked"
     return True

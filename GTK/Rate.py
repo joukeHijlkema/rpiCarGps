@@ -16,7 +16,8 @@ class Rate(Counter):
         "docstring"
         super(Rate, self).__init__(parent,w,h,name,title)
 
-        self.units = "m/s"
+        #self.units = "m/s"
+        self.units = "%"
         self.update("0")
 
     ## --------------------------------------------------------------
@@ -27,6 +28,6 @@ class Rate(Counter):
     ## date   : 20-04-2017 14:04:19
     ## --------------------------------------------------------------
     def update (self,value):
-        self.Value.set_markup("<span font_desc=\"30\">%s </span>"%value)
+        self.Value.set_markup("<span font_desc=\"30\">%s</span>"%value)
         self.Units.set_markup("<span font_desc=\"20\">%s</span>"%self.units)
         return True

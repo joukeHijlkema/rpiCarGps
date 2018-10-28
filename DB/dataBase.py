@@ -243,4 +243,4 @@ class dataBase(threading.Thread):
     ## --------------------------------------------------------------
     def resetTrip (self):
         print("DB : reset trip")
-        self.Exec("UPDATE Temp SET tripStart=CURDATE()")
+        self.Exec("UPDATE Memory SET Value=0 WHERE Id=2")
