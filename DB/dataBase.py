@@ -153,11 +153,14 @@ class dataBase(threading.Thread):
     ## Author : jouke hylkema
     ## date   : 02-29-2017 08:29:11
     ## --------------------------------------------------------------
-    def addPoint (self,data):
+    def addPoint (self,data,Force=False):
         lastPoint  = self.Get("SELECT Lat,Lon FROM Gps ORDER BY id DESC LIMIT 1")
         d          = 10.0
-        if len(lastPoint)!=0:
-            d  = self.Distance(data["lat"],data["lon"],lastPoint[0][0],lastPoint[0][1])
+        if len(lastPoint)==0 or Force:
+            self.Put(("INSERT INTO Gps (Lat,Lon,Time) VALUES (%s,%s,%s)"),(data["lat"],data["lon"],data["time"]))
+            return False
+
+        d  = self.Distance(data["lat"],data["lon"],lastPoint[0][0],lastPoint[0][1])
         if d>100.0:
             self.Put(("INSERT INTO Gps (Lat,Lon,Time) VALUES (%s,%s,%s)"),
                     (data["lat"],data["lon"],data["time"]))
@@ -246,3 +249,4 @@ class dataBase(threading.Thread):
     def resetTrip (self):
         print("DB : reset trip")
         self.Exec("UPDATE Memory SET Value=0 WHERE Id=2")
+        self.dstTrip = self.GetOne("SELECT Value FROM Memory WHERE Id=2")
