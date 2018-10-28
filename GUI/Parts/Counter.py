@@ -12,7 +12,7 @@ from blinker import signal
 
 class Counter(Gtk.Box):
 
-    conversion={"km":0.001,"km/h":3.6,"m/s":1.0,"m":1.0}
+    conversion={"km":0.001,"km/h":3.6,"m/s":1.0,"m":1.0,"%":100.0}
     
     def __init__(self,parent,*args,**kw):
         "docstring"

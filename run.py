@@ -9,9 +9,7 @@
 #  =================================================
 ## ========= TODO =============
 # - average speed
-# - distance per tank, feul consomption
-# - move to python 3
-# - save position on quit
+# - distance per tank, fuel consomption
 ## ============================
 
 import gi
@@ -39,6 +37,7 @@ else:
 import os
 import sys
 import time
+import math
 
 data = {}
 data["GPS"]={}
@@ -55,7 +54,7 @@ data["Init"]=True
 ## --------------------------------------------------------------
 def gotGpsData(gpsData):
     global data,db,win
-    # print(gpsData)
+    print(gpsData)
     data["GPS"] = gpsData
     if db.addPoint(gpsData) or data["Init"]:
         data["DB"]["dayDist"]  = db.dstDay
@@ -95,7 +94,7 @@ def timedUpdate ():
     wtd["tripDist"]    = data["DB"]["tripDist"] if "tripDist" in data["DB"] else "skip"   
     wtd["totDist"]     = data["DB"]["totDist"] if "totDist" in data["DB"] else "skip"    
     wtd["Altitude"]    = data["GPS"]["alt"] if "alt" in data["GPS"] else "skip"    
-    wtd["Rate"]        = data["GPS"]["climb"] if "climb" in data["GPS"] else "skip"     
+    wtd["Rate"]        = 2.0*math.atan2(data["GPS"]["climb"],data["GPS"]["speed"])/math.pi if ("climb" in data["GPS"] and "speed" in data["GPS"]) else ["skip"]
 
     for what in wtd:
         if wtd[what]=="skip": continue
@@ -194,4 +193,7 @@ GObject.timeout_add(100, timedUpdate)
 print("start mainloop")
 Gtk.main()
 
+print("save data")
+db.addPoint(data["GPS"],Force=True)
+db.Quit()
 

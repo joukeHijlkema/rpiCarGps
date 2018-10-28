@@ -15,6 +15,6 @@ class Rate(Counter):
         "docstring"
         super(Rate, self).__init__(parent,*args,**kw)
 
-        self.units = "m/s"
+        self.units = "%"
         self.update(0)
 
