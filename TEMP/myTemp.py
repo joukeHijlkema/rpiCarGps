@@ -23,7 +23,7 @@ class myTemp(threading.Thread):
         if self.real:
             os.system('modprobe w1-gpio')
             os.system('modprobe w1-therm')
-        
+            
             base_dir          = '/sys/bus/w1/devices/'
             device_folder     = glob.glob(base_dir + '28*')[0]
             self.device_file  = device_folder + '/w1_slave'
@@ -40,9 +40,9 @@ class myTemp(threading.Thread):
     ## --------------------------------------------------------------
     def run (self):
         while self.Doit:
-	    self.newData.send(self.readTemp())
+            self.newData.send(self.readTemp())
             # print "temp = %s °C"%self.readTemp()
-	    time.sleep(1)
+            time.sleep(1)
 
     ## --------------------------------------------------------------
     ## Description :read raw temp

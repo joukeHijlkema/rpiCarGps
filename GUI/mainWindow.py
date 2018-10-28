@@ -1,85 +1,132 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 #  =================================================
 # Trigger
 #   - Author jouke hijlkema <jouke.hijlkema@onera.fr>
-#   - dim. mars 15:35 2017
+#   - dim. août 14:24 2017
 #   - Initial Version 1.0
 #  =================================================
-from PyQt5 import QtCore, QtGui, QtWidgets
+import gi
+# gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, GObject, Gdk
 
-from Parts.speedMeter import speedMeter
-from Parts.Counter import Counter
+import sys
+sys.path.append("../GPS")
+from GPS.gtkNavit import gtkNavit
 
-import arrow
-from DB import dataBase
-from GPS.Navit import Navit
+import dbus
+import configparser
 
-class mainWindow(QtWidgets.QMainWindow):
-    def __init__(self, *args):
-        QtWidgets.QMainWindow.__init__(self, *args)
+config = configparser.ConfigParser()
+config.read("rpiCarGps.cfg")
 
-        self.setObjectName("myCarGps")
-        # self.showFullScreen()
-        self.setGeometry(QtCore.QRect(0, 0, 800, 561))
+for i in eval(config.get("Items","Active")):
+    exec("from .Parts.{item} import {item}".format(item=i))
+
+class mainWindow(Gtk.Window):
+    mode   = "Day"
+    items  = {}
         
-        self.cw =  QtWidgets.QWidget(self)
-        self.cw.setObjectName("centralwidget")
-        self.setCentralWidget(self.cw)
-
-        self.leftWidget = QtWidgets.QWidget(self.cw)
-        self.leftWidget.setGeometry(QtCore.QRect(0, 0, 275, 561))
-        self.left       = QtWidgets.QVBoxLayout(self.leftWidget)
+    def __init__(self):
+        "docstring"
+        super(mainWindow, self).__init__()
         
-        self.speed  = speedMeter(self.cw)
-        self.dstDay = Counter(self.cw,"distance today:","Km")
-        self.dstTtl = Counter(self.cw,"distance total:","Km")
-        self.temp   = Counter(self.cw,"Temperature:","°C")
-
-        # Quit button
-        self.quitButton = QtWidgets.QPushButton(self.cw)
-        self.quitButton.setObjectName("quitButton")
-        self.quitButton.setText("quit")
-
-        # Time and date
-        self.timeField = QtWidgets.QLabel(self.cw)
-        self.timeField.setText("time and date")
-        self.timeField.setFont(self.speed.Mfont)
+        self.builder = Gtk.Builder()
+        self.builder.add_from_file("GUI/Gui.glade")
         
-        self.left.addLayout(self.speed.hbox)
-        self.left.addLayout(self.dstDay.hbox)
-        self.left.addLayout(self.dstTtl.hbox)
-        self.left.addLayout(self.temp.hbox)
+        handlers = {
+            "onDeleteWindow": self.Quit,
+            "onQuitButtonPressed": self.Quit,
+            "onToggleNightDay": self.toggleNightDay
+        }
 
-        self.left.addItem(QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding))
+        self.builder.connect_signals(handlers)
 
-        self.left.addWidget(self.timeField)
-        self.left.addWidget(self.quitButton)
+        W = config.getint("Items","Width")
+        H = config.getint("Items","Height")
+        W2 = config.getint("Items","GpsWidth")
+        W1 = W-W2
+        window   = self.builder.get_object("mainWindow")
+        if config.getboolean("Items","Fullscreen"):
+            window.fullscreen()
+        else:
+            window.set_default_size(W,H)
+            window.set_size_request(W,H)
+        navCont  = self.builder.get_object("navitContainer")
+        myNavit  = gtkNavit(None,W2,H)
+        navCont.add(myNavit)
 
-        # right side
-        self.rightWidget = QtWidgets.QWidget(self.cw)
-        self.rightWidget.setGeometry(QtCore.QRect(275, 0, 525, 561))
-        self.right       = QtWidgets.QVBoxLayout(self.rightWidget)
+        ## Counters
+        butCont          = self.builder.get_object("buttonContainer")
+        
+        for i in eval(config.get("Items","Active")):
+            print("doing %s"%i)
+            args=["w=%s"%W1]
+            for kw in config.items(i):
+                args.append("{key}={val}".format(key=kw[0],val=kw[1]))
+            
+            self.items[i]  = eval("{name}(self,{arguments})".format(
+                name          = i,
+                arguments     = ",".join(args)
+            ))
+            butCont.add(self.items[i])
 
-        self.myNavit = Navit(self)
-        self.right.addWidget(self.myNavit)
-
-        self.quitButton.clicked.connect(self.close)
-
-        self.db = dataBase.dataBase("Jouke","!Jouke","localhost","busGps")
+        self.setStyle("GUI/Styles/%s/dayStyles.css"%config.get("Items","Config"))
+        
+        window.show_all()
+        myNavit.start()
 
     ## --------------------------------------------------------------
-    ## Description :called when gpsdata is ready
-    ## NOTE :
+    ## Description : set the style
+    ## NOTE : 
     ## -
     ## Author : jouke hylkema
-    ## date   : 18-19-2017 15:19:53
+    ## date   : 22-52-2017 13:52:36
     ## --------------------------------------------------------------
-    def onGpsDataReady (self,data):
-        print(data)
-        self.speed.update(data['speed'])
-        self.actualTime = arrow.get(data['time'])
-        self.timeField.setText(self.actualTime.to('local').format("ddd MMM YYYY HH:mm"))
-        self.db.Put(("INSERT INTO Gps (Lat,Lon,Time) VALUES (%s,%s,%s)"),
-                    (data['lat'],data['lon'],data['time']))
+    def setStyle (self,path):
+        self.myCss = Gtk.CssProvider()
+        self.myCss.load_from_path(path)
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), 
+            self.myCss,     
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
+    ## --------------------------------------------------------------
+    ## Description : Quit
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 20-26-2017 14:26:50
+    ## --------------------------------------------------------------
+    def Quit (self,who):
+        Gtk.main_quit()
+
+    ## --------------------------------------------------------------
+    ## Description : toggle night and day mode
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 20-27-2017 14:27:11
+    ## --------------------------------------------------------------
+    def toggleNightDay (self,who):
+        bus     = dbus.SessionBus()
+        object  = bus.get_object("org.navit_project.navit","/org/navit_project/navit")
+        iface   = dbus.Interface(object,dbus_interface="org.navit_project.navit")
+        iter    = iface.attr_iter()
+        path    = object.get_attr_wi("navit",iter)
+        navit   = bus.get_object('org.navit_project.navit', path[1])
+        print(navit)
+        iface.attr_iter_destroy(iter)
+        
+        if self.mode=="Day":
+            print("switch to night")
+            navit.set_layout("Car-dark")
+            self.setStyle("GUI/Styles/%s/nightStyles.css"%config.get("Items","Config"))
+            self.mode  = "Night"
+        else:
+            print("switch to day")
+            navit.set_layout("Car")
+            self.setStyle("GUI/Styles/%s/dayStyles.css"%config.get("Items","Config"))
+            self.mode  = "Day"

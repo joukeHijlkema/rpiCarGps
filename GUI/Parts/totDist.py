@@ -7,13 +7,14 @@
 #   - jeu. avril 13:53 2017
 #   - Initial Version 1.0
 #  =================================================
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk
 from .Counter import Counter
 
-class speedMeter(Counter):
+class totDist(Counter):
     def __init__(self,parent,*args,**kw):
         "docstring"
-        super(speedMeter, self).__init__(parent,*args,**kw)
+        super(totDist, self).__init__(parent,*args,**kw)
 
-        self.units = "km/h"
-        self.update(277.5)
+        self.units = "km"
+        self.update(0)
+

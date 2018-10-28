@@ -1,0 +1,19 @@
+@import url("./Styles.css");
+
+.Default {
+    background-color:#CFCFCF;
+}
+
+#Value {
+    color: #000000;
+}
+
+#Units {
+    color: #000000;
+}
+
+#speedMeter #Value{
+    /* color:#FF4500; */
+    color:red;
+}
+    

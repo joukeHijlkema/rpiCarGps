@@ -4,16 +4,17 @@
 #  =================================================
 # Trigger
 #   - Author jouke hijlkema <jouke.hijlkema@onera.fr>
-#   - jeu. avril 13:53 2017
+#   - lun. mai 22:33 2017
 #   - Initial Version 1.0
 #  =================================================
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk
 from .Counter import Counter
 
-class speedMeter(Counter):
+class Rate(Counter):
     def __init__(self,parent,*args,**kw):
         "docstring"
-        super(speedMeter, self).__init__(parent,*args,**kw)
+        super(Rate, self).__init__(parent,*args,**kw)
 
-        self.units = "km/h"
-        self.update(277.5)
+        self.units = "m/s"
+        self.update(0)
+

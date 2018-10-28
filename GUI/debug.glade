@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.3 -->
+<interface>
+  <requires lib="gtk+" version="3.12"/>
+  <object class="GtkWindow" id="mainWindow">
+    <property name="can_focus">False</property>
+    <property name="default_width">440</property>
+    <property name="default_height">250</property>
+    <signal name="delete-event" handler="Quit" swapped="no"/>
+    <child>
+      <object class="GtkLabel" id="myLabel">
+        <property name="name">myLabel</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">This is a test label</property>
+        <signal name="delete-event" handler="onDeleteWindow" swapped="no"/>
+      </object>
+    </child>
+  </object>
+</interface>
