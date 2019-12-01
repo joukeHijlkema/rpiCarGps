@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.4.1deb2ubuntu2
--- http://www.phpmyadmin.net
+-- version 4.6.6deb4
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Aug 30, 2017 at 10:47 AM
--- Server version: 5.7.19-0ubuntu0.16.04.1
--- PHP Version: 7.0.22-0ubuntu0.16.04.1
+-- Host: localhost:3306
+-- Generation Time: Aug 15, 2019 at 04:16 PM
+-- Server version: 10.1.38-MariaDB-0+deb9u1
+-- PHP Version: 5.6.38-0+deb8u1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `busGps`
 --
-CREATE DATABASE IF NOT EXISTS `busGps` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `busGps`;
 
 -- --------------------------------------------------------
 
@@ -28,7 +26,6 @@ USE `busGps`;
 -- Table structure for table `Gps`
 --
 
-DROP TABLE IF EXISTS `Gps`;
 CREATE TABLE `Gps` (
   `ID` bigint(11) NOT NULL,
   `Lat` double NOT NULL,
@@ -42,7 +39,6 @@ CREATE TABLE `Gps` (
 -- Table structure for table `Memory`
 --
 
-DROP TABLE IF EXISTS `Memory`;
 CREATE TABLE `Memory` (
   `Id` int(11) NOT NULL,
   `What` tinytext NOT NULL,
@@ -56,7 +52,6 @@ CREATE TABLE `Memory` (
 -- Table structure for table `Temp`
 --
 
-DROP TABLE IF EXISTS `Temp`;
 CREATE TABLE `Temp` (
   `ID` bigint(20) NOT NULL,
   `Temp` float NOT NULL,
@@ -99,17 +94,17 @@ ALTER TABLE `Temp`
 -- AUTO_INCREMENT for table `Gps`
 --
 ALTER TABLE `Gps`
-  MODIFY `ID` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35981;
+  MODIFY `ID` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114620;
 --
 -- AUTO_INCREMENT for table `Memory`
 --
 ALTER TABLE `Memory`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `Temp`
 --
 ALTER TABLE `Temp`
-  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
