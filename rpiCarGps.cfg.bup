@@ -1,0 +1,46 @@
+# Attention : no uppercase
+[Items]
+Active:["dayDist","tripDist","Altitude","Rate","Time"]
+Height:445
+Width:800
+GpsWidth:550
+Config:Boxer
+Fullscreen: no
+
+[speedMeter]
+name:"speedMeter"
+format:"{:<3d}"
+
+[dayDist]
+name:"dayDist"
+title:"Day  : "
+
+[tripDist]
+name:"tripDist"
+title:"Trip : "
+
+[tankDist]
+name:"tankDist"
+title:"Tank : "
+
+[totDist]
+name:"totDist"
+title:"Total : "
+
+[Altitude]
+name:"Altitude"
+title:"Altitude : "
+
+[Rate]
+name:"Rate"
+title:"Slope : "
+# floatdown:"1"
+
+[Time]
+name:"Time"
+
+[Modules]
+temp: no
+
+[Radio]
+lastfreq:87.9

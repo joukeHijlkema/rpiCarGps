@@ -1,0 +1,16 @@
+.Default {
+    background-color:#000000;
+}
+
+#Value {
+    color:#CECECE;
+}
+
+#Units {
+    color: #CECECE;
+}
+
+#speedMeter #Value{
+    color:#FFFCFC;
+}
+

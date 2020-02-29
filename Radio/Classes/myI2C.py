@@ -170,7 +170,7 @@ class myI2C(object):
     ## --------------------------------------------------------------
     def Read (self):
         with i2c.I2CMaster(1) as bus:
-            tmp = bus.transaction(i2c.reading(self.i2c_address, 5))
+            tmp = bus.transaction(i2c.reading(self.i2c_address, len(self.In)))
         self.In = tmp[0]
         self.Info("READ")
 

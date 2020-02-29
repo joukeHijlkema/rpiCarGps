@@ -17,9 +17,10 @@ from GPS.gtkNavit import gtkNavit
 
 import dbus
 import configparser
+from blinker import signal
 
 config = configparser.ConfigParser()
-config.read("/home/pi/Projects/rpiCarGps/rpiCarGps.cfg")
+config.read("/home/pi/rpiCarGps/rpiCarGps.cfg")
 
 for i in eval(config.get("Items","Active")):
     exec("from .Parts.{item} import {item}".format(item=i))
@@ -32,14 +33,15 @@ class mainWindow(Gtk.Window):
         "docstring"
         super(mainWindow, self).__init__()
         print("gtk version = %s.%s.%s"%(Gtk.get_major_version(),Gtk.get_minor_version(),Gtk.get_micro_version()))
-        
+
         self.builder = Gtk.Builder()
-        self.builder.add_from_file("/home/pi/Projects/rpiCarGps/GUI/Gui.glade")
+        self.builder.add_from_file("/home/pi/rpiCarGps/GUI/Gui.glade")
         
         handlers = {
-            "onDeleteWindow": self.Quit,
-            "onQuitButtonPressed": self.Quit,
-            "onToggleNightDay": self.toggleNightDay
+            "onDeleteWindow"      : self.Quit,
+            "onQuitButtonPressed" : self.Quit,
+            "onToggleNightDay"    : self.toggleNightDay,
+            "Action"              : self.Action
         }
 
         self.builder.connect_signals(handlers)
@@ -59,7 +61,7 @@ class mainWindow(Gtk.Window):
         navCont.add(myNavit)
 
         ## Counters
-        butCont          = self.builder.get_object("buttonContainer")
+        butCont = self.builder.get_object("buttonContainer")
         
         for i in eval(config.get("Items","Active")):
             print("doing %s"%i)
@@ -73,10 +75,44 @@ class mainWindow(Gtk.Window):
             ))
             butCont.add(self.items[i])
 
-        self.setStyle("/home/pi/Projects/rpiCarGps/GUI/Styles/%s/dayStyles.css"%config.get("Items","Config"))
+        self.setStyle("/home/pi/rpiCarGps/GUI/Styles/%s/dayStyles.css"%config.get("Items","Config"))
+        
+        self.toRadio = signal("toRadio")
+        self.fromRadio = signal("fromRadio")
+        self.fromRadio.connect(self.gotRadioSignal)
         
         window.show_all()
         myNavit.start()
+
+    ## --------------------------------------------------------------
+    ## Description : treat signal received from radio
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 28-31-2019 11:31:54
+    ## --------------------------------------------------------------
+    def gotRadioSignal (self,data):
+        print("GUI: received %s from Radio"%data)
+        for i in data:
+            print("%s: %s"%(i,data[i]))
+        C = " : %s MHz"%data["Channel"] if "Channel" in data else ""
+        S = "%s"%data["Station"] if "Station" in data else ""
+        self.builder.get_object("radioInfo").set_text("%s%s"%(S,C))
+        self.builder.get_object("signalStrength").set_value(float(data["Strength"]))
+
+    ## --------------------------------------------------------------
+    ## Description : GUI actions
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 26-06-2019 14:06:35
+    ## --------------------------------------------------------------
+    def Action (self,args):
+        print(args.get_name())
+        if "seekUp" in args.get_name():
+            self.toRadio.send("seekUp")
+        elif "seekDown" in args.get_name():
+            self.toRadio.send("seekDown")
 
     ## --------------------------------------------------------------
     ## Description : set the style

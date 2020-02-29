@@ -34,11 +34,13 @@ class Gps(threading.Thread):
         self.gps_socket.connect()
         self.gps_socket.watch()
         
-        self.newData  = signal('Gps')
-        self.Doit     = True
+        self.newData = signal('Gps')
+        self.Doit    = True
+        self.init    = True
 
         self.dummyLat = 43.168583333
         self.dummyLon = 1.191853333
+        print("GPS init done")
         
     ## --------------------------------------------------------------
     ## Description :run
@@ -48,6 +50,7 @@ class Gps(threading.Thread):
     ## date   : 17-52-2017 18:52:05
     ## --------------------------------------------------------------
     def run (self):
+        print("Start GPS thread")
         if self.test==True:
             print("test run")
             self.init=False
@@ -88,9 +91,10 @@ class Gps(threading.Thread):
                             self.data.clear()
                             self.data_stream.unpack(new_data)
                             # print(self.data_stream.TPV)
+                            # print("init = %s"%self.init)
                             for i in ['time','speed','lon','lat','alt','climb']:
                                 self.data[i]=self.data_stream.TPV[i]
-                            if self.init:
+                            if self.init == True:
                                 if self.data_stream.TPV["time"] != "n/a":
                                     try:
                                         os.system("sudo date -s %s"%self.data_stream.TPV["time"])
@@ -101,6 +105,7 @@ class Gps(threading.Thread):
                                 self.newData.send(self.data)
       
                 except KeyError:
+                    print("key error")
                     pass
                 except KeyboardInterrupt:
                     quit()

@@ -1,0 +1,302 @@
+execve("/usr/bin/raspi-config", ["raspi-config"], 0x7ed776b8 /* 25 vars */) = 0
+brk(NULL)                               = 0xd10000
+uname({sysname="Linux", nodename="raspberrypi", ...}) = 0
+mmap2(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x76f01000
+access("/etc/ld.so.preload", R_OK)      = 0
+openat(AT_FDCWD, "/etc/ld.so.preload", O_RDONLY|O_LARGEFILE|O_CLOEXEC) = 3
+fstat64(3, {st_mode=S_IFREG|0644, st_size=54, ...}) = 0
+mmap2(NULL, 54, PROT_READ|PROT_WRITE, MAP_PRIVATE, 3, 0) = 0x76f00000
+close(3)                                = 0
+readlink("/proc/self/exe", "/bin/dash", 4096) = 9
+openat(AT_FDCWD, "/usr/lib/arm-linux-gnueabihf/libarmmem-v7l.so", O_RDONLY|O_LARGEFILE|O_CLOEXEC) = 3
+read(3, "\177ELF\1\1\1\0\0\0\0\0\0\0\0\0\3\0(\0\1\0\0\0\254\3\0\0004\0\0\0"..., 512) = 512
+_llseek(3, 16748, [16748], SEEK_SET)    = 0
+read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 960) = 960
+_llseek(3, 16424, [16424], SEEK_SET)    = 0
+read(3, "A,\0\0\0aeabi\0\1\"\0\0\0\0056\0\6\6\10\1\t\2\n\3\f\1\22\4\24"..., 45) = 45
+_llseek(3, 16748, [16748], SEEK_SET)    = 0
+read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 960) = 960
+_llseek(3, 16424, [16424], SEEK_SET)    = 0
+read(3, "A,\0\0\0aeabi\0\1\"\0\0\0\0056\0\6\6\10\1\t\2\n\3\f\1\22\4\24"..., 45) = 45
+_llseek(3, 16748, [16748], SEEK_SET)    = 0
+read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 960) = 960
+_llseek(3, 16424, [16424], SEEK_SET)    = 0
+read(3, "A,\0\0\0aeabi\0\1\"\0\0\0\0056\0\6\6\10\1\t\2\n\3\f\1\22\4\24"..., 45) = 45
+_llseek(3, 16748, [16748], SEEK_SET)    = 0
+read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 960) = 960
+_llseek(3, 16424, [16424], SEEK_SET)    = 0
+read(3, "A,\0\0\0aeabi\0\1\"\0\0\0\0056\0\6\6\10\1\t\2\n\3\f\1\22\4\24"..., 45) = 45
+_llseek(3, 16748, [16748], SEEK_SET)    = 0
+read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 960) = 960
+_llseek(3, 16424, [16424], SEEK_SET)    = 0
+read(3, "A,\0\0\0aeabi\0\1\"\0\0\0\0056\0\6\6\10\1\t\2\n\3\f\1\22\4\24"..., 45) = 45
+_llseek(3, 16748, [16748], SEEK_SET)    = 0
+read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 960) = 960
+_llseek(3, 16424, [16424], SEEK_SET)    = 0
+read(3, "A,\0\0\0aeabi\0\1\"\0\0\0\0056\0\6\6\10\1\t\2\n\3\f\1\22\4\24"..., 45) = 45
+fstat64(3, {st_mode=S_IFREG|0644, st_size=17708, ...}) = 0
+mmap2(NULL, 81964, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x76ebe000
+mprotect(0x76ec2000, 61440, PROT_NONE)  = 0
+mmap2(0x76ed1000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3000) = 0x76ed1000
+close(3)                                = 0
+munmap(0x76f00000, 54)                  = 0
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_LARGEFILE|O_CLOEXEC) = 3
+fstat64(3, {st_mode=S_IFREG|0644, st_size=79756, ...}) = 0
+mmap2(NULL, 79756, PROT_READ, MAP_PRIVATE, 3, 0) = 0x76eaa000
+close(3)                                = 0
+openat(AT_FDCWD, "/lib/arm-linux-gnueabihf/libc.so.6", O_RDONLY|O_LARGEFILE|O_CLOEXEC) = 3
+read(3, "\177ELF\1\1\1\0\0\0\0\0\0\0\0\0\3\0(\0\1\0\0\0\300x\1\0004\0\0\0"..., 512) = 512
+_llseek(3, 1293204, [1293204], SEEK_SET) = 0
+read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2800) = 2800
+_llseek(3, 1289788, [1289788], SEEK_SET) = 0
+read(3, "A.\0\0\0aeabi\0\1$\0\0\0\0056\0\6\6\10\1\t\1\n\2\22\4\23\1\24"..., 47) = 47
+_llseek(3, 1293204, [1293204], SEEK_SET) = 0
+read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2800) = 2800
+_llseek(3, 1289788, [1289788], SEEK_SET) = 0
+read(3, "A.\0\0\0aeabi\0\1$\0\0\0\0056\0\6\6\10\1\t\1\n\2\22\4\23\1\24"..., 47) = 47
+_llseek(3, 1293204, [1293204], SEEK_SET) = 0
+read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2800) = 2800
+_llseek(3, 1289788, [1289788], SEEK_SET) = 0
+read(3, "A.\0\0\0aeabi\0\1$\0\0\0\0056\0\6\6\10\1\t\1\n\2\22\4\23\1\24"..., 47) = 47
+_llseek(3, 1293204, [1293204], SEEK_SET) = 0
+read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2800) = 2800
+_llseek(3, 1289788, [1289788], SEEK_SET) = 0
+read(3, "A.\0\0\0aeabi\0\1$\0\0\0\0056\0\6\6\10\1\t\1\n\2\22\4\23\1\24"..., 47) = 47
+_llseek(3, 1293204, [1293204], SEEK_SET) = 0
+read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2800) = 2800
+_llseek(3, 1289788, [1289788], SEEK_SET) = 0
+read(3, "A.\0\0\0aeabi\0\1$\0\0\0\0056\0\6\6\10\1\t\1\n\2\22\4\23\1\24"..., 47) = 47
+_llseek(3, 1293204, [1293204], SEEK_SET) = 0
+read(3, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 2800) = 2800
+_llseek(3, 1289788, [1289788], SEEK_SET) = 0
+read(3, "A.\0\0\0aeabi\0\1$\0\0\0\0056\0\6\6\10\1\t\1\n\2\22\4\23\1\24"..., 47) = 47
+fstat64(3, {st_mode=S_IFREG|0755, st_size=1296004, ...}) = 0
+mmap2(NULL, 1364764, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x76d5c000
+mprotect(0x76e94000, 65536, PROT_NONE)  = 0
+mmap2(0x76ea4000, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x138000) = 0x76ea4000
+mmap2(0x76ea7000, 8988, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x76ea7000
+close(3)                                = 0
+set_tls(0x76f02170)                     = 0
+mprotect(0x76ea4000, 8192, PROT_READ)   = 0
+mprotect(0x76ed1000, 4096, PROT_READ)   = 0
+mprotect(0x35000, 4096, PROT_READ)      = 0
+mprotect(0x76f03000, 4096, PROT_READ)   = 0
+munmap(0x76eaa000, 79756)               = 0
+getuid32()                              = 0
+getgid32()                              = 0
+getpid()                                = 2483
+rt_sigaction(SIGCHLD, {sa_handler=0x1f328, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x76d89120}, NULL, 8) = 0
+geteuid32()                             = 0
+brk(NULL)                               = 0xd10000
+brk(0xd31000)                           = 0xd31000
+getppid()                               = 2480
+getcwd("/home/pi/rpiCarGps/Radio", 4096) = 25
+openat(AT_FDCWD, "/usr/bin/raspi-config", O_RDONLY|O_LARGEFILE) = 3
+fcntl64(3, F_DUPFD, 10)                 = 10
+close(3)                                = 0
+fcntl64(10, F_SETFD, FD_CLOEXEC)        = 0
+geteuid32()                             = 0
+getegid32()                             = 0
+rt_sigaction(SIGINT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGINT, {sa_handler=0x1f328, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x76d89120}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x76d89120}, NULL, 8) = 0
+rt_sigaction(SIGTERM, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGTERM, {sa_handler=SIG_DFL, sa_mask=~[RTMIN RT_1], sa_flags=SA_RESTORER, sa_restorer=0x76d89120}, NULL, 8) = 0
+read(10, "#!/bin/sh\n# Part of raspi-config"..., 8192) = 8192
+pipe([3, 4])                            = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2484
+close(4)                                = 0
+read(3, "armhf\n", 128)                 = 6
+read(3, "", 128)                        = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2484, si_uid=0, si_status=0, si_utime=0, si_stime=2} ---
+sigreturn({mask=[]})                    = 0
+close(3)                                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2484
+read(10, "\t  NEWY=`expr $YVAL / 2`\n      s"..., 8192) = 8192
+read(10, "iguration/config-txt/overclockin"..., 8192) = 8192
+read(10, "stemd/system/getty@tty1.service."..., 8192) = 8192
+read(10, "\\\"/GRUB_CMDLINE_LINUX_DEFAULT=\\\""..., 8192) = 8192
+read(10, "tall raspi-config &&\n  printf \"S"..., 8192) = 8192
+brk(0xd52000)                           = 0xd52000
+read(10, "   printf \"Not currently support"..., 8192) = 8192
+pipe([3, 4])                            = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2485
+close(4)                                = 0
+read(3, "0\n", 128)                     = 2
+read(3, "", 128)                        = 0
+close(3)                                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2485
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2485, si_uid=0, si_status=0, si_utime=0, si_stime=1} ---
+sigreturn({mask=[]})                    = 2485
+wait4(-1, 0x7ef3715c, WNOHANG, NULL)    = -1 ECHILD (No child processes)
+read(10, "o the latest version\" \\\n        "..., 8192) = 1246
+stat64("/boot/config.txt", {st_mode=S_IFREG|0755, st_size=1766, ...}) = 0
+pipe([3, 4])                            = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2486
+close(4)                                = 0
+read(3, "211\n", 128)                   = 4
+read(3, "", 128)                        = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2486, si_uid=0, si_status=0, si_utime=0, si_stime=1} ---
+sigreturn({mask=[]})                    = 0
+close(3)                                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2486
+pipe([3, 4])                            = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2487
+close(4)                                = 0
+read(3, "armhf\n", 128)                 = 6
+read(3, "", 128)                        = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2487, si_uid=0, si_status=0, si_utime=0, si_stime=1} ---
+sigreturn({mask=[]})                    = 0
+close(3)                                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2487
+pipe([3, 4])                            = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2488
+close(4)                                = 0
+read(3, "5 Interfacing Options", 128)   = 21
+read(3, "", 128)                        = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2488, si_uid=0, si_status=0, si_utime=3, si_stime=0} ---
+sigreturn({mask=[]})                    = 0
+close(3)                                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2488
+pipe([3, 4])                            = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2490
+close(4)                                = 0
+read(3, "armhf\n", 128)                 = 6
+read(3, "", 128)                        = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2490, si_uid=0, si_status=0, si_utime=0, si_stime=1} ---
+sigreturn({mask=[]})                    = 0
+close(3)                                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2490
+pipe([3, 4])                            = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2491
+close(4)                                = 0
+read(3, "P5 I2C", 128)                  = 6
+read(3, "", 128)                        = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2491, si_uid=0, si_status=0, si_utime=3, si_stime=1} ---
+sigreturn({mask=[]})                    = 0
+close(3)                                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2491
+pipe([3, 4])                            = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2492
+close(4)                                = 0
+read(3, "0\n", 128)                     = 2
+read(3, "", 128)                        = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2492, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+sigreturn({mask=[]})                    = 0
+close(3)                                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2492
+stat64("/usr/local/sbin/whiptail", 0x7ef36b90) = -1 ENOENT (No such file or directory)
+stat64("/usr/local/bin/whiptail", 0x7ef36b90) = -1 ENOENT (No such file or directory)
+stat64("/usr/sbin/whiptail", 0x7ef36b90) = -1 ENOENT (No such file or directory)
+stat64("/usr/bin/whiptail", {st_mode=S_IFREG|0755, st_size=22328, ...}) = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2494
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2494
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2494, si_uid=0, si_status=0, si_utime=3, si_stime=1} ---
+sigreturn({mask=[]})                    = 2494
+wait4(-1, 0x7ef36ab4, WNOHANG, NULL)    = -1 ECHILD (No child processes)
+pipe([3, 4])                            = 0
+write(4, "local key=assert(arg[1])\nlocal v"..., 327) = 327
+close(4)                                = 0
+fcntl64(0, F_DUPFD, 10)                 = 11
+close(0)                                = 0
+fcntl64(11, F_SETFD, FD_CLOEXEC)        = 0
+dup2(3, 0)                              = 0
+close(3)                                = 0
+openat(AT_FDCWD, "/boot/config.txt.bak", O_WRONLY|O_CREAT|O_TRUNC|O_LARGEFILE, 0666) = 3
+fcntl64(1, F_DUPFD, 10)                 = 12
+close(1)                                = 0
+fcntl64(12, F_SETFD, FD_CLOEXEC)        = 0
+dup2(3, 1)                              = 1
+close(3)                                = 0
+stat64("/usr/local/sbin/lua", 0x7ef36960) = -1 ENOENT (No such file or directory)
+stat64("/usr/local/bin/lua", 0x7ef36960) = -1 ENOENT (No such file or directory)
+stat64("/usr/sbin/lua", 0x7ef36960)     = -1 ENOENT (No such file or directory)
+stat64("/usr/bin/lua", {st_mode=S_IFREG|0755, st_size=133036, ...}) = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2495
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2495
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2495, si_uid=0, si_status=0, si_utime=0, si_stime=1} ---
+sigreturn({mask=[]})                    = 2495
+dup2(11, 0)                             = 0
+close(11)                               = 0
+dup2(12, 1)                             = 1
+close(12)                               = 0
+stat64("/usr/local/sbin/mv", 0x7ef36960) = -1 ENOENT (No such file or directory)
+stat64("/usr/local/bin/mv", 0x7ef36960) = -1 ENOENT (No such file or directory)
+stat64("/usr/sbin/mv", 0x7ef36960)      = -1 ENOENT (No such file or directory)
+stat64("/usr/bin/mv", 0x7ef36960)       = -1 ENOENT (No such file or directory)
+stat64("/sbin/mv", 0x7ef36960)          = -1 ENOENT (No such file or directory)
+stat64("/bin/mv", {st_mode=S_IFREG|0755, st_size=108688, ...}) = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2496
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2496
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2496, si_uid=0, si_status=0, si_utime=0, si_stime=1} ---
+sigreturn({mask=[]})                    = 2496
+wait4(-1, 0x7ef36ae4, WNOHANG, NULL)    = -1 ECHILD (No child processes)
+stat64("/etc/modprobe.d/raspi-blacklist.conf", {st_mode=S_IFREG|0644, st_size=0, ...}) = 0
+stat64("/usr/local/sbin/sed", 0x7ef36be0) = -1 ENOENT (No such file or directory)
+stat64("/usr/local/bin/sed", 0x7ef36be0) = -1 ENOENT (No such file or directory)
+stat64("/usr/sbin/sed", 0x7ef36be0)     = -1 ENOENT (No such file or directory)
+stat64("/usr/bin/sed", 0x7ef36be0)      = -1 ENOENT (No such file or directory)
+stat64("/sbin/sed", 0x7ef36be0)         = -1 ENOENT (No such file or directory)
+stat64("/bin/sed", {st_mode=S_IFREG|0755, st_size=92292, ...}) = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2497
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2497
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2497, si_uid=0, si_status=0, si_utime=0, si_stime=1} ---
+sigreturn({mask=[]})                    = 2497
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2498
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2498
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2498, si_uid=0, si_status=0, si_utime=0, si_stime=1} ---
+sigreturn({mask=[]})                    = 2498
+stat64("/usr/local/sbin/grep", 0x7ef36be0) = -1 ENOENT (No such file or directory)
+stat64("/usr/local/bin/grep", 0x7ef36be0) = -1 ENOENT (No such file or directory)
+stat64("/usr/sbin/grep", 0x7ef36be0)    = -1 ENOENT (No such file or directory)
+stat64("/usr/bin/grep", 0x7ef36be0)     = -1 ENOENT (No such file or directory)
+stat64("/sbin/grep", 0x7ef36be0)        = -1 ENOENT (No such file or directory)
+stat64("/bin/grep", {st_mode=S_IFREG|0755, st_size=157272, ...}) = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2499
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2499
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2499, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+sigreturn({mask=[]})                    = 2499
+stat64("/usr/local/sbin/dtparam", 0x7ef36c10) = -1 ENOENT (No such file or directory)
+stat64("/usr/local/bin/dtparam", 0x7ef36c10) = -1 ENOENT (No such file or directory)
+stat64("/usr/sbin/dtparam", 0x7ef36c10) = -1 ENOENT (No such file or directory)
+stat64("/usr/bin/dtparam", {st_mode=S_IFREG|0755, st_size=30040, ...}) = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2500
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2500
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2500, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+sigreturn({mask=[]})                    = 2500
+stat64("/usr/local/sbin/modprobe", 0x7ef36c20) = -1 ENOENT (No such file or directory)
+stat64("/usr/local/bin/modprobe", 0x7ef36c20) = -1 ENOENT (No such file or directory)
+stat64("/usr/sbin/modprobe", 0x7ef36c20) = -1 ENOENT (No such file or directory)
+stat64("/usr/bin/modprobe", 0x7ef36c20) = -1 ENOENT (No such file or directory)
+stat64("/sbin/modprobe", {st_mode=S_IFREG|0755, st_size=132612, ...}) = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2534
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2534
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2534, si_uid=0, si_status=0, si_utime=1, si_stime=0} ---
+sigreturn({mask=[]})                    = 2534
+wait4(-1, 0x7ef36b44, WNOHANG, NULL)    = -1 ECHILD (No child processes)
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2535
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2535
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2535, si_uid=0, si_status=0, si_utime=0, si_stime=1} ---
+sigreturn({mask=[]})                    = 2535
+wait4(-1, 0x7ef36db4, WNOHANG, NULL)    = -1 ECHILD (No child processes)
+pipe([3, 4])                            = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2538
+close(4)                                = 0
+read(3, "armhf\n", 128)                 = 6
+read(3, "", 128)                        = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2538, si_uid=0, si_status=0, si_utime=1, si_stime=0} ---
+sigreturn({mask=[]})                    = 0
+close(3)                                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 2538
+pipe([3, 4])                            = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x76f01d18) = 2539
+close(4)                                = 0
+read(3, "", 128)                        = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=2539, si_uid=0, si_status=1, si_utime=3, si_stime=0} ---
+sigreturn({mask=[]})                    = 0
+close(3)                                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 1}], 0, NULL) = 2539
+stat64("/etc/profile.d/raspi-config.sh", 0x7ef36b00) = -1 ENOENT (No such file or directory)
+exit_group(0)                           = ?
++++ exited with 0 +++

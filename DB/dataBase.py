@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+2#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 #  =================================================
@@ -27,6 +27,7 @@ class dataBase(threading.Thread):
         self.dstTrip = 0.0
         self.dstDay  = 0.0
         self.init=True
+        print("DB init done")
 
     ## --------------------------------------------------------------
     ## Description : run the thread
@@ -36,7 +37,7 @@ class dataBase(threading.Thread):
     ## date   : 03-59-2017 09:59:37
     ## --------------------------------------------------------------
     def run (self):
-        
+        print("Start DB")
         try:
             self.cnx = mysql.connector.connect(user=self.user, password=self.pwd, host=self.host, database=self.db)
         except mysql.connector.Error as err:
@@ -82,7 +83,9 @@ class dataBase(threading.Thread):
     ## date   : 16-08-2017 14:08:07
     ## --------------------------------------------------------------
     def Put(self,What,Values):
-        #print("add %s to %s"%(Values,What))
+        # print("add %s to %s"%(Values,What))
+        if "n/a" in Values:
+            return 
         while not self.cnx.is_connected():
             self.cnx.reconnect()
             # print("reconnecting to db")
@@ -161,14 +164,15 @@ class dataBase(threading.Thread):
             return
         lastPoint  = self.Get("SELECT Lat,Lon FROM Gps ORDER BY id DESC LIMIT 1")
         d          = 10.0
+        date = arrow.get(data["time"]).format("YYYY-MM-DD HH:mm:ss")
         if len(lastPoint)==0 or Force:
-            self.Put(("INSERT INTO Gps (Lat,Lon,Time) VALUES (%s,%s,%s)"),(data["lat"],data["lon"],data["time"]))
+            self.Put(("INSERT INTO Gps (Lat,Lon,Time) VALUES (%s,%s,%s)"),(data["lat"],data["lon"],date))
             return False
 
         d  = self.Distance(data["lat"],data["lon"],lastPoint[0][0],lastPoint[0][1])
         if d>100.0:
             self.Put(("INSERT INTO Gps (Lat,Lon,Time) VALUES (%s,%s,%s)"),
-                    (data["lat"],data["lon"],data["time"]))
+                    (data["lat"],data["lon"],date))
 
             self.dstDay +=d
             self.dstTrip+=d

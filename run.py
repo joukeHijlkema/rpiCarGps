@@ -14,20 +14,27 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, GObject, GLib
 print(Gtk.get_major_version ())
 print(Gtk.get_minor_version ())
 print(Gtk.get_micro_version ())
 from blinker import signal
 import configparser
 
+# to get rid off the arrow warnings
+import warnings
+from arrow.factory import ArrowParseWarning
+warnings.simplefilter("ignore", ArrowParseWarning)
+
 config = configparser.ConfigParser()
-config.read("/home/pi/Projects/rpiCarGps/rpiCarGps.cfg")
+config.read("/home/pi/rpiCarGps/rpiCarGps.cfg")
 
 # from GTK.mainGtk import mainGtk as MainWindow
 from GUI.mainWindow import mainWindow as MainWindow
 from GPS.myGps import Gps
 from DB.dataBase import dataBase
+from Radio.myRadio import myRadio as Radio
+
 if config.getboolean("Modules","temp"):
     from TEMP.myTemp import myTemp
     tempOn = True
@@ -44,6 +51,7 @@ data["GPS"]={}
 data["DB"]={}
 data["TEMP"]={}
 data["Init"]=True
+data["Radio"]={}
 
 ## --------------------------------------------------------------
 ## Description : act on gps data
@@ -62,6 +70,18 @@ def gotGpsData(gpsData):
         data["DB"]["tankDist"] = db.dstTank
         data["DB"]["totDist"]  = db.dstTot
         data["Init"]=False
+
+## --------------------------------------------------------------
+## Description : got radio info
+## NOTE : 
+## -
+## Author : jouke hylkema
+## date   : 26-52-2019 14:52:24
+## --------------------------------------------------------------
+def gotRadioData (radioData):
+    print("RADIO: got %s"%radioData)
+    for i in ["Channel","Station"]:
+        data["Radio"][i]=radioData[i]
 
 ## --------------------------------------------------------------
 ## Description : got temperature reading
@@ -83,7 +103,6 @@ def gotTempData (tempData):
 ## date   : 03-42-2017 10:42:09
 ## --------------------------------------------------------------
 def timedUpdate ():
-    global data,tempOn
     # print(data)
     wtd                = {}
     wtd["speedMeter"]  = data["GPS"]["speed"] if "speed" in data["GPS"] else "skip"
@@ -116,14 +135,17 @@ def timedUpdate ():
 ## date   : 03-05-2017 10:05:20
 ## --------------------------------------------------------------
 def Quit(*args):
-    global db,tempOn,myGps,temp
+    global radio,db,tempOn,myGps,temp
     print("Quitting")
+    with open("/home/pi/rpiCarGps/rpiCarGps.cfg", 'w') as configfile:
+        config.write(configfile)
     db.Quit()
     print(myGps)
     myGps.Doit=False
     if tempOn:
         print("kill temp")
         temp.Doit=False
+    radio.Doit=False
     Gtk.main_quit()
 
 ## --------------------------------------------------------------
@@ -159,30 +181,52 @@ def resetTank (data):
 ## --------------------------------------------------------------
 def dayHist(offset):
     data["DB"]["dayDist"]  = db.dayDist(offset)    
-    
+
+## --------------------------------------------------------------
+## Description : Actions from the GUI
+## NOTE : 
+## -
+## Author : jouke hylkema
+## date   : 26-37-2019 13:37:17
+## --------------------------------------------------------------
+def Actions (self,args):
+    print(args)
+
+## =========================================================
+## MAIN
+
 real=("armv7l" in os.uname()[4])
 rootPath = os.path.dirname(os.path.realpath(sys.argv[0]))
 print("root = %s"%rootPath)
 # win = MainWindow(1024,600,"%s/GTK/Styles.css"%rootPath,real)
 win = MainWindow()
 #time.sleep(1)
-    
+print("Main window done")
+
 # GPS
 myGps = Gps(real)
 myGps.start()
 while myGps.init:
     time.sleep(0.1)
+print("GPS done")
+
     
 # Database
 db = dataBase("Jouke","!Jouke","localhost","busGps")
 db.start()
 while db.init:
     time.sleep(0.1)
+print("Database done")
 
 # Temperature
 if tempOn:
     temp = myTemp(real)
     temp.start()
+print("Temp done")
+
+Radio
+radio = Radio(config.getfloat("Radio","lastfreq"))
+radio.start()
 
 #Signaling
 gpsData = signal('Gps')
@@ -205,7 +249,8 @@ win.connect("delete-event",Quit)
 # win.quitButton.connect("clicked", Quit)
 win.builder.get_object("quitButton").connect("clicked", Quit)
 
-GObject.timeout_add(100, timedUpdate)
+GLib.timeout_add(100, timedUpdate)
+print("Signaling done")
 
 print("start mainloop")
 Gtk.main()
