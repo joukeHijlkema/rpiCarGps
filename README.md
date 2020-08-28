@@ -17,7 +17,7 @@ A replacement for the speed indicator of my old van (and it does GPS and a lot m
 	
 ## for the adafruit GPS
 
-	this is for my jessie version look at [adafruit](https://learn.adafruit.com/adafruit-ultimate-gps-on-the-raspberry-pi/using-uart-instead-of-usb) for details.
+	this is for my jessie version look at [adafruit](https://learn.adafruit.com/adafruit-ultimate-gps-on-the-raspberry-pi/using-uart-instead-of-usb) for details. (this needs to be done after gpsd instalation.
 	
 	-in /boot/cmdline.txt remove console=serial0,115200
 	-sudo systemctl stop serial-getty@ttyS0.service
@@ -31,7 +31,7 @@ A replacement for the speed indicator of my old van (and it does GPS and a lot m
 	touch /boot/ssh
 
 ## dependencies
-	sudo apt install navit* mysql-server gpsd gpsd-clients git
+	sudo apt install navit* mariadb-server gpsd gpsd-clients git
 	sudo -H pip3 install gps3 mysql-connector==2.1.6 arrow
 	
 ## git repository but you probably already have it if you're reading this
