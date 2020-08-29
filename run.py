@@ -23,8 +23,8 @@ import configparser
 
 # to get rid off the arrow warnings
 import warnings
-from arrow.factory import ArrowParseWarning
-warnings.simplefilter("ignore", ArrowParseWarning)
+# from arrow.factory import ArrowParseWarning
+# warnings.simplefilter("ignore", ArrowParseWarning)
 
 config = configparser.ConfigParser()
 config.read("/home/pi/rpiCarGps/rpiCarGps.cfg")
@@ -33,7 +33,6 @@ config.read("/home/pi/rpiCarGps/rpiCarGps.cfg")
 from GUI.mainWindow import mainWindow as MainWindow
 from GPS.myGps import Gps
 from DB.dataBase import dataBase
-from Radio.myRadio import myRadio as Radio
 
 if config.getboolean("Modules","temp"):
     from TEMP.myTemp import myTemp
@@ -41,6 +40,18 @@ if config.getboolean("Modules","temp"):
 else:
     tempOn = False
 
+if config.getboolean("Modules","radio"):
+    from Radio.myRadio import myRadio as Radio
+    radioOn = True
+else:
+    radioOn = False
+
+if config.getboolean("Modules","level"):
+    from Level.myLevel import myLevel
+    levelOn = True
+else:
+    levelOn = False
+    
 import os
 import sys
 import time
@@ -52,6 +63,16 @@ data["DB"]={}
 data["TEMP"]={}
 data["Init"]=True
 data["Radio"]={}
+
+## --------------------------------------------------------------
+## Description : Act on level data
+## NOTE : 
+## -
+## Author : jouke hylkema
+## date   : 29-04-2020 15:04:34
+## --------------------------------------------------------------
+def gotLevelData(levelData):
+    print("X:%s, Y:%s"%(levelData["X"],levelData["Y"]))
 
 ## --------------------------------------------------------------
 ## Description : act on gps data
@@ -145,7 +166,9 @@ def Quit(*args):
     if tempOn:
         print("kill temp")
         temp.Doit=False
-    radio.Doit=False
+    if radioOn:
+        print("kill radio")
+        radio.Doit=False
     Gtk.main_quit()
 
 ## --------------------------------------------------------------
@@ -209,7 +232,6 @@ myGps.start()
 while myGps.init:
     time.sleep(0.1)
 print("GPS done")
-
     
 # Database
 db = dataBase("Jouke","!Jouke","localhost","busGps")
@@ -222,12 +244,20 @@ print("Database done")
 if tempOn:
     temp = myTemp(real)
     temp.start()
-print("Temp done")
+    print("Temp done")
 
-Radio
-radio = Radio(config.getfloat("Radio","lastfreq"))
-radio.start()
+#radio
+if radioOn:
+    radio = Radio(config.getfloat("Radio","lastfreq"))
+    radio.start()
+    print("Radio done")
 
+#level
+if levelOn:
+    level = myLevel(config.get)
+    level.start()
+    print("Level started")
+    
 #Signaling
 gpsData = signal('Gps')
 gpsData.connect(gotGpsData)
@@ -246,7 +276,6 @@ backDayTot = signal("dayTot")
 backDayTot.connect(dayHist)
 
 win.connect("delete-event",Quit)
-# win.quitButton.connect("clicked", Quit)
 win.builder.get_object("quitButton").connect("clicked", Quit)
 
 GLib.timeout_add(100, timedUpdate)

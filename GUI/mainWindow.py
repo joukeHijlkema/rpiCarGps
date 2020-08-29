@@ -149,7 +149,7 @@ class mainWindow(Gtk.Window):
     ## --------------------------------------------------------------
     def toggleNightDay (self,who):
         bus     = dbus.SessionBus()
-        object  = bus.get_object("org.navit_project.navit","/org/navit_project/navit")
+        object  = bus.get_object("org.navit_project.navit","/org/navit_project/navit/default_navit")
         iface   = dbus.Interface(object,dbus_interface="org.navit_project.navit")
         iter    = iface.attr_iter()
         path    = object.get_attr_wi("navit",iter)

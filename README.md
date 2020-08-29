@@ -87,3 +87,4 @@ StartupNotify=false
 
 ## Python
 I switched to glade for the GUI. The catalog file is in GLADE/CATALOG
+
