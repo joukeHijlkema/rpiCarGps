@@ -19,10 +19,17 @@ def gotLevelData(levelData):
 
 Z = eval(config.get("Params","levelZero"))    
 L = myLevel(Z[0],Z[1])
-signal("Level").connect(gotLevelData)
 L.start()
 
-input("hit return to stop")
+signal("fromLevel").connect(gotLevelData)
+toLevel = signal("toLevel")
+
+while True:
+ I=input("hit q to stop, els send to level: ")
+ if "q" in I:
+     break
+ toLevel.send(I)
+ 
 L.Doit = False
 
 config["Params"]["levelZero"]="[%s,%s]"%(10,20)

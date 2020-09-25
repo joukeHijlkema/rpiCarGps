@@ -9,7 +9,7 @@
 #  =================================================
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GObject, Gdk
+from gi.repository import Gtk, GObject, Gdk, GdkPixbuf, Gio, GLib
 
 import sys
 sys.path.append("../GPS")
@@ -19,17 +19,20 @@ import dbus
 import configparser
 from blinker import signal
 
-config = configparser.ConfigParser()
-config.read("/home/pi/rpiCarGps/rpiCarGps.cfg")
+import svgutils.transform as sg
+from lxml import etree
 
-for i in eval(config.get("Items","Active")):
+tmp_config = configparser.ConfigParser()
+tmp_config.read("/home/pi/rpiCarGps/rpiCarGps.cfg")
+
+for i in eval(tmp_config.get("Items","Active")):
     exec("from .Parts.{item} import {item}".format(item=i))
 
 class mainWindow(Gtk.Window):
     mode   = "Day"
     items  = {}
         
-    def __init__(self):
+    def __init__(self,config):
         "docstring"
         super(mainWindow, self).__init__()
         print("gtk version = %s.%s.%s"%(Gtk.get_major_version(),Gtk.get_minor_version(),Gtk.get_micro_version()))
@@ -41,17 +44,20 @@ class mainWindow(Gtk.Window):
             "onDeleteWindow"      : self.Quit,
             "onQuitButtonPressed" : self.Quit,
             "onToggleNightDay"    : self.toggleNightDay,
-            "Action"              : self.Action
+            "Action"              : self.Action,
+            "focusTab"            : self.focusTab,
+            "levelReset"          : self.levelReset,
+            "levelZoom"           : self.levelZoom
         }
 
         self.builder.connect_signals(handlers)
-
-        W = config.getint("Items","Width")
-        H = config.getint("Items","Height")
-        W2 = config.getint("Items","GpsWidth")
+        self.config = config
+        W = self.config.getint("Items","Width")
+        H = self.config.getint("Items","Height")
+        W2 = self.config.getint("Items","GpsWidth")
         W1 = W-W2
         window   = self.builder.get_object("mainWindow")
-        if config.getboolean("Items","Fullscreen"):
+        if self.config.getboolean("Items","Fullscreen"):
             window.fullscreen()
         else:
             window.set_default_size(W,H)
@@ -63,10 +69,10 @@ class mainWindow(Gtk.Window):
         ## Counters
         butCont = self.builder.get_object("buttonContainer")
         
-        for i in eval(config.get("Items","Active")):
+        for i in eval(self.config.get("Items","Active")):
             print("doing %s"%i)
             args=["w=%s"%W1]
-            for kw in config.items(i):
+            for kw in self.config.items(i):
                 args.append("{key}={val}".format(key=kw[0],val=kw[1]))
             
             self.items[i]  = eval("{name}(self,{arguments})".format(
@@ -75,15 +81,102 @@ class mainWindow(Gtk.Window):
             ))
             butCont.add(self.items[i])
 
-        self.setStyle("/home/pi/rpiCarGps/GUI/Styles/%s/dayStyles.css"%config.get("Items","Config"))
+        self.setStyle("/home/pi/rpiCarGps/GUI/Styles/%s/dayStyles.css"%self.config.get("Items","Config"))
         
         self.toRadio = signal("toRadio")
         self.fromRadio = signal("fromRadio")
         self.fromRadio.connect(self.gotRadioSignal)
+
+        ## Level stuff
+        self.toLevel = signal("toLevel")
+        self.fromLevel = signal("fromLevel")
+        self.fromLevel.connect(self.gotLevelData)
+
+        # self.levelSvg = sg.fromfile("/home/pi/rpiCarGps/GUI/Images/Level.svg")
+        self.levelSvg  = etree.parse("/home/pi/rpiCarGps/GUI/Images/Level.svg")
+        self.levelRoot = self.levelSvg.getroot()
+        self.levelXi   = self.levelRoot.xpath("//*[@id = 'Xindicator']")[0]
+        self.levelYi   = self.levelRoot.xpath("//*[@id = 'Yindicator']")[0]
+
+        self.updateLevelSvg()
         
         window.show_all()
         myNavit.start()
 
+    ## --------------------------------------------------------------
+    ## Description : zoom/unzoom level
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 30-42-2020 10:42:05
+    ## --------------------------------------------------------------
+    def levelZoom(self, args):
+        self.config["Level"]["zoom"]="%s"%self.builder.get_object("levelZoom").get_value()
+        
+    ## --------------------------------------------------------------
+    ## Description : reset level
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 29-25-2020 20:25:53
+    ## --------------------------------------------------------------
+    def levelReset(self, args):
+        self.toLevel.send("reset")
+        
+    ## --------------------------------------------------------------
+    ## Description : update level svg
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 29-04-2020 18:04:42
+    ## --------------------------------------------------------------
+    def updateLevelSvg(self):
+        self.builder.get_object("levelImage").clear()
+        stream = Gio.MemoryInputStream.new_from_bytes(GLib.Bytes.new(etree.tostring(self.levelSvg)))
+        pixbuf = GdkPixbuf.Pixbuf.new_from_stream(stream, None)
+        self.builder.get_object("levelImage").set_from_pixbuf(pixbuf)
+        
+        
+    ## --------------------------------------------------------------
+    ## Description : tab focus changed
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 29-51-2020 15:51:51
+    ## --------------------------------------------------------------
+    def focusTab(self, nb,box,i):
+        if (i==1):
+            self.toLevel.send("start")
+            print("W=%s,H=%s"%(nb.get_allocation().width,nb.get_allocation().height))
+            print("W=%s,H=%s"%(box.get_allocation().width,box.get_allocation().height))
+        else:
+            self.toLevel.send("stop")
+
+    ## --------------------------------------------------------------
+    ## Description : treat Level data
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 29-17-2020 16:17:00
+    ## --------------------------------------------------------------
+    def gotLevelData(self, data):
+
+        print("Level")
+        S = pow(10,float(self.config["Level"]["zoom"]))
+        X = round(S*0.0631*data["X"]+265)
+        Y = round(S*0.1071*data["Y"]+450)
+        print(data)
+        print("X:%s, Y:%s"%(X,Y))
+        self.levelXi.set("y1","%s"%X)
+        self.levelXi.set("y2","%s"%X)
+        
+        self.levelYi.set("x1","%s"%Y)
+        self.levelYi.set("x2","%s"%Y)
+
+        self.levelSvg.write("/home/pi/tmp/Test.svg")
+        
+        GLib.idle_add(self.updateLevelSvg)
+        
     ## --------------------------------------------------------------
     ## Description : treat signal received from radio
     ## NOTE : 
@@ -160,10 +253,10 @@ class mainWindow(Gtk.Window):
         if self.mode=="Day":
             print("switch to night")
             navit.set_layout("Car-dark")
-            self.setStyle("GUI/Styles/%s/nightStyles.css"%config.get("Items","Config"))
+            self.setStyle("GUI/Styles/%s/nightStyles.css"%self.config.get("Items","Config"))
             self.mode  = "Night"
         else:
             print("switch to day")
             navit.set_layout("Car")
-            self.setStyle("GUI/Styles/%s/dayStyles.css"%config.get("Items","Config"))
+            self.setStyle("GUI/Styles/%s/dayStyles.css"%self.config.get("Items","Config"))
             self.mode  = "Day"

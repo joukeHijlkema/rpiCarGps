@@ -31,8 +31,13 @@ A replacement for the speed indicator of my old van (and it does GPS and a lot m
 	touch /boot/ssh
 
 ## dependencies
-	sudo apt install navit* mariadb-server gpsd gpsd-clients git
-	sudo -H pip3 install gps3 mysql-connector==2.1.6 arrow
+	sudo apt install navit* mariadb-server gpsd gpsd-clients git gir1.2-rsvg-2.0 python-gi-cairo python3-cairo libgeos-c1v5
+	sudo -H pip3 install gps3 mysql-connector==2.1.6 arrow fatskml shapely
+
+        And if you wbat to use the extraction script
+
+	sudo apt install libgeos-c1v5
+        sudo -H pip3 install fastkml shapely geopy
 	
 ## git repository but you probably already have it if you're reading this
 

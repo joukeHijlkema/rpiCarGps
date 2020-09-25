@@ -1,0 +1,15 @@
+[unit]
+Description=shutdown on button press
+After=carGps.service
+
+[Service]
+Environment="DISPLAY=:0"
+Environment="XAUTHORITY=/home/pi/.Xauthority"
+WorkingDirectory=/home/pi/rpiCarGps/
+User=pi
+ExecStart=/home/pi/rpiCarGps/Scripts/shutDown.py
+
+[Install]
+WantedBy=graphical.target
+
+

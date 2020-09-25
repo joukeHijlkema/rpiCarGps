@@ -25,7 +25,6 @@ import configparser
 import warnings
 # from arrow.factory import ArrowParseWarning
 # warnings.simplefilter("ignore", ArrowParseWarning)
-
 config = configparser.ConfigParser()
 config.read("/home/pi/rpiCarGps/rpiCarGps.cfg")
 
@@ -72,8 +71,10 @@ data["Radio"]={}
 ## date   : 29-04-2020 15:04:34
 ## --------------------------------------------------------------
 def gotLevelData(levelData):
-    print("X:%s, Y:%s"%(levelData["X"],levelData["Y"]))
-
+    if "raz" in levelData:
+        config["Level"]["zero"]="[%s,%s]"%(levelData[1],levelData[2])
+        
+    
 ## --------------------------------------------------------------
 ## Description : act on gps data
 ## NOTE : 
@@ -169,6 +170,9 @@ def Quit(*args):
     if radioOn:
         print("kill radio")
         radio.Doit=False
+    if levelOn:
+        print("kill level")
+        level.Doit=False
     Gtk.main_quit()
 
 ## --------------------------------------------------------------
@@ -222,7 +226,7 @@ real=("armv7l" in os.uname()[4])
 rootPath = os.path.dirname(os.path.realpath(sys.argv[0]))
 print("root = %s"%rootPath)
 # win = MainWindow(1024,600,"%s/GTK/Styles.css"%rootPath,real)
-win = MainWindow()
+win = MainWindow(config)
 #time.sleep(1)
 print("Main window done")
 
@@ -254,8 +258,10 @@ if radioOn:
 
 #level
 if levelOn:
-    level = myLevel(config.get)
+    Z = eval(config.get("Level","zero"))
+    level = myLevel(Z[0],Z[1])
     level.start()
+    signal("fromLevel").connect(gotLevelData)
     print("Level started")
     
 #Signaling

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Exec=/home/pi/rpiCarGps/run.py
+Hidden=false
+X-GNOME-Autostart-enabled=true
+Name=rpiCarGps
+Comment=rpiCarGps
+Terminal=false
+Icon=/home/pi/rpiCarGps/GUI/Icons/compass.png
+Path=/home/pi/rpiCarGps/
+StartupNotify=false

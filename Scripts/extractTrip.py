@@ -15,7 +15,7 @@ import argparse
 import arrow
 from fastkml import kml
 from shapely.geometry import Point
-from geopy.distance import vincenty as dist
+from geopy.distance import geodesic as dist
 
 parser = argparse.ArgumentParser(description='Extract a journey from th rpiGps')
 
@@ -73,7 +73,7 @@ for d in data:
         lat=d[1]
         lon=d[2]
 
-fid = open("{}.kml".format(args.title),"w")
+fid = open("{}_nights.kml".format(args.title),"w")
 fid.write(rootNights.to_string(prettyprint=True))
 fid.close()
 

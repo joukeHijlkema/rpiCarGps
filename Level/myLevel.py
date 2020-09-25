@@ -26,9 +26,28 @@ class myLevel(threading.Thread):
         self.zeroY = zeroY
 
         self.data = {}
-        self.newData = signal("Level")
+
+        self.fromLevel = signal("fromLevel")
+        self.toLevel   = signal("toLevel")
+        self.toLevel.connect(self.messageReceived)
+
+        self.Measure = False
         self.Doit    = True
 
+    ## --------------------------------------------------------------
+    ## Description : treat incomming signal
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 29-04-2020 16:04:08
+    ## --------------------------------------------------------------
+    def messageReceived(self, msg):
+        if "start" in msg:
+            self.Measure = True
+        elif "stop" in msg:
+            self.Measure = False
+        elif "reset" in msg:
+            self.raz()
     ## --------------------------------------------------------------
     ## Description : run
     ## NOTE : 
@@ -38,9 +57,10 @@ class myLevel(threading.Thread):
     ## --------------------------------------------------------------
     def run(self):
         while self.Doit:
-            self.data.clear()
-            [self.data["X"],self.data["Y"]] = self.measure(100)
-            self.newData.send(self.data)
+            if self.Measure:
+                self.data.clear()
+                [self.data["X"],self.data["Y"]] = self.measure(100)
+                self.fromLevel.send(self.data)
             time.sleep(1)
             
     ## --------------------------------------------------------------
@@ -70,3 +90,4 @@ class myLevel(threading.Thread):
         self.zeroY = 0
 
         [self.zeroX,self.zeroY] = self.measure(500)
+        self.fromLevel.send(["raz",self.zeroX,self.zeroY])

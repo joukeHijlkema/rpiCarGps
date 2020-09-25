@@ -1,13 +1,14 @@
 [unit]
 Description=my car gps
-After=mysql.service
+After=mysql.service mysqld.service gpsd.service
 
 [Service]
-Environment="DISPLAY=:0"
-Environment="XAUTHORITY=/home/pi/.Xauthority"
-WorkingDirectory=/home/pi/Projects/rpiCarGps/
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/pi/.Xauthority
+WorkingDirectory=/home/pi/rpiCarGps
 User=pi
-ExecStart=/home/pi/Projects/rpiCarGps/run.py
+ExecStart=/home/pi/rpiCarGps/run.py
+Restart=always
 
 [Install]
 WantedBy=graphical.target
