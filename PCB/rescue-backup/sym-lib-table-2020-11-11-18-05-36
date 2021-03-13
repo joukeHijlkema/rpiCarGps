@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name carGpsHat-rescue)(type Legacy)(uri ${KIPRJMOD}/carGpsHat-rescue.lib)(options "")(descr ""))
+  (lib (name SparkFun-RF)(type Legacy)(uri /home/ubuntu/hylkema/Projects/kicadLib/SparkFun-Kicad-Libraries/SparkFun-RF.lib)(options "")(descr ""))
+)

@@ -8,8 +8,9 @@
 #  =================================================
 import threading
 from blinker import signal
-import Level.IMU as IMU
+import IMU as IMU
 import time
+import sys
 
 class myLevel(threading.Thread):
     """Documentationuse the berryIMU to measure inclination"""
@@ -19,7 +20,9 @@ class myLevel(threading.Thread):
         IMU.detectIMU()     #Detect if BerryIMU is connected.
         if(IMU.BerryIMUversion == 99):
             print(" No BerryIMU found... exiting ")
-            sys.exit()
+            # sys.exit()
+            self.Doit = False
+            return
         IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
         self.zeroX = zeroX
@@ -91,3 +94,28 @@ class myLevel(threading.Thread):
 
         [self.zeroX,self.zeroY] = self.measure(500)
         self.fromLevel.send(["raz",self.zeroX,self.zeroY])
+
+if __name__ == '__main__':
+
+    ## --------------------------------------------------------------
+    ## Description : echo data
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 30-03-2020 17:03:27
+    ## --------------------------------------------------------------
+    def gotData(data):
+        print("=== LEVEL Data ===")
+        for i in data:
+            print("| %s: %s"%(i,data[i]))
+
+    Level = myLevel(0,0)
+    Level.start()
+    signal('fromLevel').connect(gotData)
+    Level.toLevel.send("start")
+
+    cmd = input("Press key to quit")
+
+    Level.Doit=False
+    
+       

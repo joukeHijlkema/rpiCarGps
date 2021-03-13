@@ -750,7 +750,7 @@ Map</text></img>
 
 		<!-- Mapset template for openstreetmaps -->
 		<mapset enabled="yes">
-			<map type="binfile" enabled="yes" data="/home/pi/Maps/*"/>
+			<map type="binfile" enabled="yes" data="/Maps/*"/>
 		</mapset>
 
 		<!-- Mapset template for garmin maps -->

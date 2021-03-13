@@ -8,16 +8,6 @@
     <property name="stock">gtk-media-next</property>
     <signal name="button-press-event" handler="Action" swapped="no"/>
   </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-media-rewind</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-media-forward</property>
-  </object>
   <object class="GtkImage" id="image4">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -29,11 +19,11 @@
     <property name="step_increment">0.01</property>
     <property name="page_increment">0.10000000000000001</property>
   </object>
+  <object class="GtkTextBuffer" id="radioRdsText"/>
   <object class="GtkWindow" id="mainWindow">
     <property name="name">mainWindow</property>
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
-    <property name="decorated">False</property>
     <child type="titlebar">
       <placeholder/>
     </child>
@@ -41,9 +31,9 @@
       <object class="GtkGrid">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="column_homogeneous">True</property>
         <child>
           <object class="GtkNotebook" id="notebook1">
+            <property name="name">noteBook</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
@@ -101,6 +91,7 @@
             </child>
             <child type="tab">
               <object class="GtkLabel">
+                <property name="name">gpsLabel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">GPS</property>
@@ -184,13 +175,13 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkLevelBar" id="signalStrength">
-                        <property name="name">signalStrength</property>
+                      <object class="GtkLevelBar" id="radioSignalStrength">
+                        <property name="name">radioSignalStrength</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="valign">start</property>
                         <property name="hexpand">False</property>
-                        <property name="max_value">75</property>
+                        <property name="max_value">100</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -213,6 +204,8 @@
                     <child>
                       <object class="GtkButton" id="seekDown">
                         <property name="name">seekDown</property>
+                        <property name="width_request">80</property>
+                        <property name="height_request">50</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -226,17 +219,18 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="stepDown">
-                        <property name="name">stepDown</property>
+                      <object class="GtkEntry" id="radioFreq">
+                        <property name="name">radioFreq</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="image">image2</property>
-                        <signal name="clicked" handler="Action" swapped="no"/>
+                        <property name="max_length">10</property>
+                        <style>
+                          <class name="bigText"/>
+                        </style>
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="fill">True</property>
+                        <property name="fill">False</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -245,6 +239,9 @@
                         <property name="name">radioInfo</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <style>
+                          <class name="bigText"/>
+                        </style>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -253,23 +250,9 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="stepUp">
-                        <property name="name">stepUp</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="image">image3</property>
-                        <signal name="clicked" handler="Action" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">3</property>
-                      </packing>
-                    </child>
-                    <child>
                       <object class="GtkButton" id="seekUp">
                         <property name="name">seekUp</property>
+                        <property name="width_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -295,12 +278,17 @@
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkLabel" id="rdsText">
-                        <property name="name">rdsText</property>
+                      <object class="GtkTextView">
+                        <property name="height_request">25</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">rds Info</property>
-                        <property name="single_line_mode">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="margin_top">3</property>
+                        <property name="margin_bottom">3</property>
+                        <property name="editable">False</property>
+                        <property name="buffer">radioRdsText</property>
+                        <style>
+                          <class name="mediumText"/>
+                        </style>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -309,22 +297,142 @@
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <object class="GtkToggleButton" id="onOff">
-                        <property name="label">gtk-media-play</property>
-                        <property name="name">onOff</property>
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="use_stock">True</property>
-                        <signal name="toggled" handler="Action" swapped="no"/>
+                        <property name="can_focus">False</property>
+                        <property name="homogeneous">True</property>
+                        <child>
+                          <object class="GtkToggleButton" id="radioOnOff">
+                            <property name="label">gtk-media-play</property>
+                            <property name="name">radioOnOff</property>
+                            <property name="height_request">50</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="use_stock">True</property>
+                            <signal name="toggled" handler="Action" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="radioStore_1">
+                            <property name="label" translatable="yes">1</property>
+                            <property name="name">radioStore_1</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="activate" handler="Action" swapped="no"/>
+                            <signal name="clicked" handler="Action" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="radioStore_2">
+                            <property name="label" translatable="yes">2</property>
+                            <property name="name">radioStore_2</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="activate" handler="Action" swapped="no"/>
+                            <signal name="clicked" handler="Action" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="radioStore_3">
+                            <property name="label" translatable="yes">3</property>
+                            <property name="name">radioStore_3</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="activate" handler="Action" swapped="no"/>
+                            <signal name="clicked" handler="Action" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="radioStore_4">
+                            <property name="label" translatable="yes">4</property>
+                            <property name="name">radioStore_4</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="activate" handler="Action" swapped="no"/>
+                            <signal name="clicked" handler="Action" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="radioStore_5">
+                            <property name="label" translatable="yes">5</property>
+                            <property name="name">radioStore_5</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="activate" handler="Action" swapped="no"/>
+                            <signal name="clicked" handler="Action" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">5</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="radioStore_6">
+                            <property name="label" translatable="yes">6</property>
+                            <property name="name">radioStore_6</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <signal name="activate" handler="Action" swapped="no"/>
+                            <signal name="clicked" handler="Action" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">6</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSwitch" id="radioStoreSelector">
+                            <property name="name">radioStoreSelector</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <signal name="activate" handler="Action" swapped="no"/>
+                            <signal name="notify" handler="Action" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">7</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">2</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
@@ -347,6 +455,176 @@
               </object>
               <packing>
                 <property name="position">2</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="mpdTab">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkGrid">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="row_homogeneous">True</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Title:</property>
+                        <property name="width_chars">7</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Artist:</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Album:</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="mpdTitle">
+                        <property name="name">mpdTitle</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hexpand">True</property>
+                        <style>
+                          <class name="mediumText"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="mpdArtist">
+                        <property name="name">mpdArtist</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <style>
+                          <class name="mediumText"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="mpdAlbum">
+                        <property name="name">mpdAlbum</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <style>
+                          <class name="mediumText"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">2</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkButton" id="mpdPrev">
+                        <property name="label">gtk-media-previous</property>
+                        <property name="name">mpdPrev</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="clicked" handler="Action" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="mpdPlay">
+                        <property name="label">gtk-media-play</property>
+                        <property name="name">mpdPlay</property>
+                        <property name="height_request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="clicked" handler="Action" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="mpdSkip">
+                        <property name="label">gtk-media-next</property>
+                        <property name="name">mpdSkip</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="clicked" handler="Action" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child type="tab">
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">MPD</property>
+              </object>
+              <packing>
+                <property name="position">3</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>

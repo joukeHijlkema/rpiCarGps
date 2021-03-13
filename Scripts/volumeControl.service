@@ -1,16 +1,13 @@
 [unit]
-Description=shutdown on button press
-After=carGps.service
+Description=volume control
 
 [Service]
 Environment="DISPLAY=:0"
 Environment="XAUTHORITY=/home/pi/.Xauthority"
-WorkingDirectory=/home/pi/rpiCarGps/
+WorkingDirectory=/home/pi/rpiCarGps/Volume
 User=pi
-ExecStart=/home/pi/rpiCarGps/Scripts/shutDown.py
+ExecStart=/home/pi/rpiCarGps/Volume/Volume.py
 Restart=always
 
 [Install]
 WantedBy=graphical.target
-
-

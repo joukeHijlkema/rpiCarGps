@@ -25,7 +25,7 @@ class piCodes(object):
     ## --------------------------------------------------------------
     def getStation (self,key):
         key = key.upper()
-        print("looking for %s"%key)
+        # print("looking for %s"%key)
         if key in self.PI:
             return self.PI[key][0]
         else:

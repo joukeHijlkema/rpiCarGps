@@ -32,6 +32,7 @@ config.read("/home/pi/rpiCarGps/rpiCarGps.cfg")
 from GUI.mainWindow import mainWindow as MainWindow
 from GPS.myGps import Gps
 from DB.dataBase import dataBase
+from MPD.myMPD import myMPD
 
 if config.getboolean("Modules","temp"):
     from TEMP.myTemp import myTemp
@@ -42,6 +43,7 @@ else:
 if config.getboolean("Modules","radio"):
     from Radio.myRadio import myRadio as Radio
     radioOn = True
+    radio   = None
 else:
     radioOn = False
 
@@ -101,10 +103,10 @@ def gotGpsData(gpsData):
 ## date   : 26-52-2019 14:52:24
 ## --------------------------------------------------------------
 def gotRadioData (radioData):
-    print("RADIO: got %s"%radioData)
+    # print("RADIO: got %s"%radioData)
     for i in ["Channel","Station"]:
         data["Radio"][i]=radioData[i]
-
+        config["Radio"][i] = "%s"%radioData[i]
 ## --------------------------------------------------------------
 ## Description : got temperature reading
 ## NOTE : 
@@ -157,22 +159,23 @@ def timedUpdate ():
 ## date   : 03-05-2017 10:05:20
 ## --------------------------------------------------------------
 def Quit(*args):
-    global radio,db,tempOn,myGps,temp
+    global radio,db,tempOn,myGps,temp,Music
     print("Quitting")
-    with open("/home/pi/rpiCarGps/rpiCarGps.cfg", 'w') as configfile:
-        config.write(configfile)
     db.Quit()
-    print(myGps)
     myGps.Doit=False
+    Music.Doit=False    
     if tempOn:
         print("kill temp")
         temp.Doit=False
     if radioOn:
         print("kill radio")
-        radio.Doit=False
+        if radio:
+            radio.Doit=False
     if levelOn:
         print("kill level")
         level.Doit=False
+    with open("/home/pi/rpiCarGps/rpiCarGps.cfg", 'w') as configfile:
+        config.write(configfile)
     Gtk.main_quit()
 
 ## --------------------------------------------------------------
@@ -216,13 +219,42 @@ def dayHist(offset):
 ## Author : jouke hylkema
 ## date   : 26-37-2019 13:37:17
 ## --------------------------------------------------------------
-def Actions (self,args):
-    print(args)
+def Actions (args):
+    global radio, config
+    print("Actions: %s"%args)
+    print("radioOn = %s"%radioOn)
+    if radioOn:
+        if "radioOnOff" in args:
+            if radio is not None:
+                radio.Doit = False
+                radio = None
+            else:
+                radio = Radio(config.getfloat("Radio","lastfreq"),0x10,1)
+                radio.start()
+        elif "radioStore" in args and radio is not None:
+            config["Radio"]["preset_%s"%args.split()[1]] = "%s"%radio.getFreq()
+        elif "radioRestore" in args and radio is not None:
+            radio.setFrequency(config.getfloat("Radio","preset_%s"%args.split()[1]))
 
+## --------------------------------------------------------------
+## Description : got MPD data
+## NOTE : 
+## -
+## Author : jouke hylkema
+## date   : 27-15-2021 15:15:26
+## --------------------------------------------------------------
+def gotMpdData(args):
+    print("received from MPD: %s"%args)
+            
 ## =========================================================
 ## MAIN
 
 real=("armv7l" in os.uname()[4])
+### begin debug ###
+# real = False
+### end debug   ###
+
+
 rootPath = os.path.dirname(os.path.realpath(sys.argv[0]))
 print("root = %s"%rootPath)
 # win = MainWindow(1024,600,"%s/GTK/Styles.css"%rootPath,real)
@@ -250,12 +282,6 @@ if tempOn:
     temp.start()
     print("Temp done")
 
-#radio
-if radioOn:
-    radio = Radio(config.getfloat("Radio","lastfreq"))
-    radio.start()
-    print("Radio done")
-
 #level
 if levelOn:
     Z = eval(config.get("Level","zero"))
@@ -263,23 +289,29 @@ if levelOn:
     level.start()
     signal("fromLevel").connect(gotLevelData)
     print("Level started")
-    
+
+# MPD
+Music = myMPD()
+Music.start()
+
 #Signaling
-gpsData = signal('Gps')
-gpsData.connect(gotGpsData)
+signal('Gps').connect(gotGpsData)
 
 if tempOn:
-    tempData = signal("Temp")
-    tempData.connect(gotTempData)
+    signal("Temp").connect(gotTempData)
 
-resetTripSignal = signal("tripDist_return")
-resetTripSignal.connect(resetTrip)
+if radioOn:
+    signal("fromRadio").connect(gotRadioData)
 
-resetTankSignal = signal("tankDist_return")
-resetTankSignal.connect(resetTank)
+signal("tripDist_return").connect(resetTrip)
 
-backDayTot = signal("dayTot")
-backDayTot.connect(dayHist)
+signal("tankDist_return").connect(resetTank)
+
+signal("dayTot").connect(dayHist)
+
+signal("Actions").connect(Actions)
+
+signal("fromMPD").connect(gotMpdData)
 
 win.connect("delete-event",Quit)
 win.builder.get_object("quitButton").connect("clicked", Quit)
@@ -293,4 +325,5 @@ Gtk.main()
 print("save data")
 db.addPoint(data["GPS"],Force=True)
 db.Quit()
+Music.doIt = False
 

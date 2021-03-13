@@ -1,0 +1,3 @@
+[submodule "GPS/navit"]
+	path = GPS/navit
+	url = https://github.com/navit-gps/navit.git

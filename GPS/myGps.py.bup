@@ -8,8 +8,7 @@
 #   - Initial Version 1.0
 #  =================================================
 import threading
-# from gps3 import gps3
-from gps3.agps3threaded import AGPS3mechanism
+from gps3 import gps3
 from blinker import signal
 import time
 import arrow
@@ -25,12 +24,10 @@ class Gps(threading.Thread):
 
         self.test = not real
         
-        # self.gps_socket = gps3.GPSDSocket()
-        # self.data_stream = gps3.DataStream()
-        # self.gps_socket.connect()
-        # self.gps_socket.watch()
-        self.agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
-        self.agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
+        self.gps_socket = gps3.GPSDSocket()
+        self.data_stream = gps3.DataStream()
+        self.gps_socket.connect()
+        self.gps_socket.watch()
         
         self.newData = signal('Gps')
         self.Doit    = True
@@ -65,26 +62,33 @@ class Gps(threading.Thread):
                 self.newData.send(self.data)
                 time.sleep(1)
         else:
-            self.agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
-            while self.Doit:
-                self.data.clear()
-                if self.init == True:
-                    if self.agps_thread.data_stream.time != "n/a":
-                        try:
-                            os.system("sudo date -s %s"%self.agps_thread.data_stream.time)
-                            self.init=False
-                        except:
-                            print("waiting for time")
-                else:
-                    self.data["time"]  = self.agps_thread.data_stream.time
-                    self.data["speed"] = self.agps_thread.data_stream.speed
-                    self.data["lon"]   = self.agps_thread.data_stream.lon
-                    self.data["lat"]   = self.agps_thread.data_stream.lat
-                    self.data["alt"]   = self.agps_thread.data_stream.alt
-                    self.data["climb"] = self.agps_thread.data_stream.climb
-                    self.newData.send(self.data)
+            while self.Doit==True:
+                try:
+                    for new_data in self.gps_socket:
+                        if not self.Doit : break
+                        if new_data:
+                            self.data.clear()
+                            self.data_stream.unpack(new_data)
+                            for i in ['time','speed','lon','lat','alt','climb']:
+                                self.data[i]=self.data_stream.TPV[i]
+                            if self.init == True:
+                                if self.data_stream.TPV["time"] != "n/a":
+                                    try:
+                                        os.system("sudo date -s %s"%self.data_stream.TPV["time"])
+                                        self.init=False
+                                    except:
+                                        print("waiting for time")
+                            else:
+                                self.newData.send(self.data)
+      
+                except KeyError:
+                    print("key error")
+                    pass
+                except KeyboardInterrupt:
+                    quit()
+                except StopIteration:
+                    self.session = None
 
-                time.sleep(1)
         print("myGps quited")
     
 if __name__ == '__main__':
@@ -103,8 +107,7 @@ if __name__ == '__main__':
             print("| %s: %s"%(i,data[i]))
 
     myGps = Gps(True)
-    # cProfile.run("myGps.run()")
-    myGps.start()
+    cProfile.run("myGps.run()")
     gpsData = signal('Gps')
     gpsData.connect(gotGpsData)
 

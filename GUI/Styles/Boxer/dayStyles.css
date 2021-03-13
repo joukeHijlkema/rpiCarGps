@@ -16,3 +16,9 @@
     color:#FF4500;
 }
     
+.bigText {
+    font: 25px Sans;
+}
+.mediumText {
+    font: 20px Sans;
+}

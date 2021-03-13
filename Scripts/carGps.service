@@ -1,16 +1,20 @@
-[unit]
+[Unit]
 Description=my car gps
 After=mysql.service mysqld.service gpsd.service
+Requires=mysql.service mysqld.service gpsd.service
+StartLimitIntervalSec=10
+StartLimitBurst=1
 
 [Service]
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi/.Xauthority
-WorkingDirectory=/home/pi/rpiCarGps
 User=pi
+WorkingDirectory=/home/pi/rpiCarGps
 ExecStart=/home/pi/rpiCarGps/run.py
 Restart=always
+RestartSec=10
 
 [Install]
-WantedBy=graphical.target
+WantedBy=default.target
 
 

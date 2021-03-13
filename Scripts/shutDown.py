@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 #  =================================================
@@ -10,12 +10,17 @@
 import os
 import time
 import RPi.GPIO as GPIO
+from systemd import journal
 
 def shutDown(arg):
     global Pin
     time.sleep(2)
     if GPIO.input(Pin):
-        print "shut down : %s"%arg
+        journal.send(
+            message="JOUKE: Shutting down",
+            priority=journal.Priority.INFO,
+            some_field='a value',
+        )
         os.system('sudo poweroff')
 
     
@@ -24,7 +29,6 @@ Pin = 5
 GPIO.setup(Pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.add_event_detect(Pin, GPIO.RISING, callback = shutDown)
 
-#raw_input("wait ...")
 while 1:
     time.sleep(1)
 

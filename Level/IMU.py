@@ -1,9 +1,9 @@
 import smbus
 bus = smbus.SMBus(1)
-from .LSM9DS0 import *
-from .LSM9DS1 import *
-from .LSM6DSL import *
-from .LIS3MDL import *
+from LSM9DS0 import *
+from LSM9DS1 import *
+from LSM6DSL import *
+from LIS3MDL import *
 import time
 
 BerryIMUversion = 99
@@ -15,7 +15,6 @@ def detectIMU():
     #BerryIMUv3 uses the LSM6DSL and LIS3MDL
  
     global BerryIMUversion
-
 
     try:
         #Check for BerryIMUv1 (LSM9DS0)
@@ -29,7 +28,6 @@ def detectIMU():
         if (LSM9DS0_WHO_G_response == 0xd4) and (LSM9DS0_WHO_XM_response == 0x49):
             print("Found BerryIMUv1 (LSM9DS0)")
             BerryIMUversion = 1
-
 
     try:
         #Check for BerryIMUv2 (LSM9DS1)
@@ -60,23 +58,8 @@ def detectIMU():
             BerryIMUversion = 3
     time.sleep(1)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 def writeByte(device_address,register,value):
     bus.write_byte_data(device_address, register, value)
-
-
 
 def readACCx():
     acc_l = 0
@@ -94,11 +77,6 @@ def readACCx():
     acc_combined = (acc_l | acc_h <<8)
     return acc_combined  if acc_combined < 32768 else acc_combined - 65536
 
-
-
- 
-
-
 def readACCy():
     acc_l = 0
     acc_h = 0
@@ -114,7 +92,6 @@ def readACCy():
 
     acc_combined = (acc_l | acc_h <<8)
     return acc_combined  if acc_combined < 32768 else acc_combined - 65536
-
 
 def readACCz():
     acc_l = 0
@@ -132,7 +109,6 @@ def readACCz():
     acc_combined = (acc_l | acc_h <<8)
     return acc_combined  if acc_combined < 32768 else acc_combined - 65536
 
-
 def readGYRx():
     gyr_l = 0
     gyr_h = 0
@@ -148,7 +124,6 @@ def readGYRx():
 
     gyr_combined = (gyr_l | gyr_h <<8)
     return gyr_combined  if gyr_combined < 32768 else gyr_combined - 65536
-
 
 def readGYRy():
     gyr_l = 0
@@ -182,7 +157,6 @@ def readGYRz():
     gyr_combined = (gyr_l | gyr_h <<8)
     return gyr_combined  if gyr_combined < 32768 else gyr_combined - 65536
 
-
 def readMAGx():
     mag_l = 0
     mag_h = 0
@@ -198,7 +172,6 @@ def readMAGx():
 
     mag_combined = (mag_l | mag_h <<8)
     return mag_combined  if mag_combined < 32768 else mag_combined - 65536
-
 
 def readMAGy():
     mag_l = 0
@@ -216,7 +189,6 @@ def readMAGy():
     mag_combined = (mag_l | mag_h <<8)
     return mag_combined  if mag_combined < 32768 else mag_combined - 65536
 
-
 def readMAGz():
     mag_l = 0
     mag_h = 0
@@ -232,8 +204,6 @@ def readMAGz():
 
     mag_combined = (mag_l | mag_h <<8)
     return mag_combined  if mag_combined < 32768 else mag_combined - 65536
-
-
 
 def initIMU():
 
@@ -280,5 +250,3 @@ def initIMU():
         writeByte(LIS3MDL_ADDRESS,LIS3MDL_CTRL_REG1, 0b11011100)         # Temp sesnor enabled, High performance, ODR 80 Hz, FAST ODR disabled and Selft test disabled.
         writeByte(LIS3MDL_ADDRESS,LIS3MDL_CTRL_REG2, 0b00100000)         # +/- 8 gauss
         writeByte(LIS3MDL_ADDRESS,LIS3MDL_CTRL_REG3, 0b00000000)         # Continuous-conversion mode
-
-

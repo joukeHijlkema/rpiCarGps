@@ -1,0 +1,20 @@
+[Unit]
+Description=link pulse source to sink for radio
+After=syslog.target sound.target pulseaudio.service
+Requires=sound.target
+StartLimitIntervalSec=10
+StartLimitBurst=1
+
+[Service]
+User=pi
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/pi/.Xauthority
+Type=simple
+ExecStart=/usr/bin/gst-launch-1.0 -vvv pulsesrc ! pulsesink
+TimeoutStopSec=20
+KillMode=process
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

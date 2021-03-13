@@ -63,7 +63,7 @@ class mainWindow(Gtk.Window):
             window.set_default_size(W,H)
             window.set_size_request(W,H)
         navCont  = self.builder.get_object("navitContainer")
-        myNavit  = gtkNavit(None,W2,H)
+        myNavit  = gtkNavit(None,W2,H-50)
         navCont.add(myNavit)
 
         ## Counters
@@ -97,6 +97,17 @@ class mainWindow(Gtk.Window):
         self.levelRoot = self.levelSvg.getroot()
         self.levelXi   = self.levelRoot.xpath("//*[@id = 'Xindicator']")[0]
         self.levelYi   = self.levelRoot.xpath("//*[@id = 'Yindicator']")[0]
+
+        ## Radio stuff
+        self.Store = False
+
+        # Action signal to talk to main proc
+        self.actionSignal = signal("Actions")
+
+        # MPD stuff
+        self.toMpd = signal("toMPD")
+        self.fromMpd = signal("fromMPD")
+        self.fromMpd.connect(self.gotMpdData)
 
         self.updateLevelSvg()
         
@@ -153,6 +164,19 @@ class mainWindow(Gtk.Window):
             self.toLevel.send("stop")
 
     ## --------------------------------------------------------------
+    ## Description : treat mpd signals
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 13-06-2021 12:06:14
+    ## --------------------------------------------------------------
+    def gotMpdData(self, data):
+        # print("MPD: received %s"%data)
+        GLib.idle_add(self.builder.get_object("mpdTitle").set_text,data["title"])
+        GLib.idle_add(self.builder.get_object("mpdArtist").set_text,data["artist"])
+        GLib.idle_add(self.builder.get_object("mpdAlbum").set_text,data["album"])
+        
+    ## --------------------------------------------------------------
     ## Description : treat Level data
     ## NOTE : 
     ## -
@@ -185,14 +209,20 @@ class mainWindow(Gtk.Window):
     ## date   : 28-31-2019 11:31:54
     ## --------------------------------------------------------------
     def gotRadioSignal (self,data):
-        print("GUI: received %s from Radio"%data)
-        for i in data:
-            print("%s: %s"%(i,data[i]))
-        C = " : %s MHz"%data["Channel"] if "Channel" in data else ""
-        S = "%s"%data["Station"] if "Station" in data else ""
-        self.builder.get_object("radioInfo").set_text("%s%s"%(S,C))
-        self.builder.get_object("signalStrength").set_value(float(data["Strength"]))
-
+        # print("GUI: received %s from Radio"%data)
+        # for i in data:
+        #     print("%s: %s"%(i,data[i]))
+        GLib.idle_add(self.builder.get_object("radioFreq").set_text,
+                      "%s MHz"%data["Channel"] if "Channel" in data else "")
+        GLib.idle_add(self.builder.get_object("radioInfo").set_text,
+                      "%s"%data["Station"] if "Station" in data else "")
+        GLib.idle_add(self.builder.get_object("radioSignalStrength").set_value,
+                      float(data["Strength"]))
+        rDS = ""
+        for c in data["rdsText"]:
+            rDS+=c
+        GLib.idle_add(self.builder.get_object("radioRdsText").set_text,rDS)
+            
     ## --------------------------------------------------------------
     ## Description : GUI actions
     ## NOTE : 
@@ -200,13 +230,46 @@ class mainWindow(Gtk.Window):
     ## Author : jouke hylkema
     ## date   : 26-06-2019 14:06:35
     ## --------------------------------------------------------------
-    def Action (self,args):
-        print(args.get_name())
+    def Action (self,args,args2=None):
+        print("mainwindow Action: %s"%args.get_name())
         if "seekUp" in args.get_name():
             self.toRadio.send("seekUp")
+            # self.clearRadioData()
         elif "seekDown" in args.get_name():
             self.toRadio.send("seekDown")
+            # self.clearRadioData()
+        elif "radioOnOff" in args.get_name():
+            self.actionSignal.send("radioOnOff")
+            # self.clearRadioData()
+        elif "radioStoreSelector" in args.get_name():
+            self.Store = self.builder.get_object("radioStoreSelector").get_active ()
+        elif "radioStore" in args.get_name():
+            id = args.get_name().split("_")[1]
+            if self.Store:
+                self.actionSignal.send("radioStore %s"%id)
+            else:
+                self.actionSignal.send("radioRestore %s"%id)
+        elif "mpdPlay" in args.get_name():
+            print("MPD play")
+            self.toMpd.send("play")
+        elif "mpdSkip" in args.get_name():
+            self.toMpd.send("next")
+        elif "mpdPrev" in args.get_name():
+            self.toMpd.send("previous")
+        
 
+    ## --------------------------------------------------------------
+    ## Description : empty radion data
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 14-56-2021 17:56:06
+    ## --------------------------------------------------------------
+    def clearRadioData(self):
+        print("clear radio data")
+        GLib.idle_add(self.builder.get_object("radioFreq").set_text,"")
+        GLib.idle_add(self.builder.get_object("radioInfo").set_text,"")
+        GLib.idle_add(self.builder.get_object("radioRdsText").set_text,"")
     ## --------------------------------------------------------------
     ## Description : set the style
     ## NOTE : 

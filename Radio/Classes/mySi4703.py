@@ -23,12 +23,15 @@ class mySi4703(object):
         super(mySi4703, self).__init__()
         self.i2c_address = i2c_address
         self.i2c_bus     = i2c_bus
-        
+
+        self.update        = 10
+        self.updateCounter = 0
+
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        self.res         = 23
-        self.sdio        = 2
-        self.gpio2       = 22
+        self.res    = 12
+        self.sdio   = 2
+        self.gpio2  = 16
         GPIO.setup(self.res,GPIO.OUT)
         GPIO.setup(self.sdio,GPIO.OUT)
         GPIO.setup(self.gpio2,GPIO.IN)
@@ -100,7 +103,6 @@ class mySi4703(object):
         subprocess.check_output(['gpio', '-g', 'mode', '2', 'ALT0'])
 
         self.Read() # to initialise the buffer
-        self.Info("Init regs")
 
         self.Set("XOSEN",1)
         self.Write()
@@ -120,9 +122,6 @@ class mySi4703(object):
 
         self.Write()
         self.Read()
-        # GPIO.add_event_detect(self.gpio2, GPIO.FALLING,callback=self.doGpio2)
-        # GPIO.add_event_detect(self.gpio2, GPIO.RISING,callback=self.doGpio2)
-        # GPIO.add_event_detect(self.gpio2, GPIO.BOTH,callback=self.doGpio2)
 
        
     ## --------------------------------------------------------------
@@ -185,7 +184,7 @@ class mySi4703(object):
         print(" tuning ...")
         GPIO.wait_for_edge(self.gpio2, GPIO.FALLING, timeout=1000)
         self.Read()
-        self.Info("after set frequency")
+        # self.Info("after set frequency")
         self.Set("TUNE",0)
         self.Write()
         self.doRds()
@@ -212,7 +211,7 @@ class mySi4703(object):
         self.Set("SEEK",0)
         self.Set("STC",0)
         self.Write()
-        self.Info("Seek finished")
+        # self.Info("Seek finished")
         self.Read()
         if self.Get("SF/BL"):
             print("No channel found")
@@ -233,26 +232,12 @@ class mySi4703(object):
         self.data["Stereo"]   = self.Get("ST")
         
         self.Set("RDSIEN",1)
-        self.Info("RDS")
         self.Write()
         print(" RDS ...")
         self.data["stationName"] = [""]*8
         self.data["rdsText"]     = [""]*64
         self.data["MType"]       = 0
         GPIO.add_event_detect(self.gpio2, GPIO.FALLING,callback=self.rdsFollow)
-        # GPIO.wait_for_edge(self.gpio2, GPIO.FALLING, timeout=1000)        
-        # self.Read()
-        # self.Info("RDS")
-        # if self.Get("RDSR"):
-        #     print("got valid RDS info")
-        #     self.data["Channel"]  = self.chan2freq(RDS=True)
-        #     self.data["Station"]  = self.PI.getStation(format(self.Buffer[12],'04x'))
-        #     self.data["Strength"] = self.Get("RSSI")
-        #     self.data["Stereo"]   = self.Get("ST")
-        #     self.newData.send(self.data)
-        # ## change rest for continious RDS
-        # self.Set("RDSIEN",0)
-        # self.Write()
 
     ## --------------------------------------------------------------
     ## Description : Constant RDS info
@@ -263,17 +248,19 @@ class mySi4703(object):
     ## --------------------------------------------------------------
     def rdsFollow (self,args):
         self.Read()
-        self.Info("RDS")
         if self.Get("RDSR"):
-            print("got valid RDS info")
             self.data["Channel"]  = self.chan2freq(RDS=True)
             self.data["Station"]  = self.PI.getStation(format(self.Buffer[12],'04x'))
             self.data["Strength"] = self.Get("RSSI")
             self.data["Stereo"]   = self.Get("ST")
             self.rdsParse()
-            
-        self.newData.send(self.data)
 
+        # self.updateCounter += 1
+        # if (self.updateCounter > self.update):
+        #     self.newData.send(self.data)
+        #     self.updateCounter = 0
+        self.newData.send(self.data)
+        
     ## --------------------------------------------------------------
     ## Description : Parse the RDS blocks
     ## NOTE : 
@@ -285,7 +272,6 @@ class mySi4703(object):
         
         GType = self.getBits("RDSB",15,12)
 
-        print("Gtype=%s"%GType)
         if GType==0:
             C = 2*self.getBits("RDSB",1,0)
             self.data["stationName"][C]   = chr(self.getBits("RDSD",15,8))
@@ -376,8 +362,6 @@ class mySi4703(object):
         for n,i in enumerate(self.Buffer):
             print("Register %2s : |%s| (0x%s)"%(n,"|".join(format(i,'016b')),format(i,'04x')))
         print("==========")
-        # for d in self.data:
-        #     print("%s: %s"%(d,self.data[d]))
 
     ## --------------------------------------------------------------
     ## Description : set bit in register
@@ -415,3 +399,30 @@ class mySi4703(object):
     ## --------------------------------------------------------------
     def toBits (self,n,w):
         return list(int(i) for i in format(n,'0%db'%w))
+
+    ## --------------------------------------------------------------
+    ## Description : empty data
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 14-12-2021 18:12:44
+    ## --------------------------------------------------------------
+    def clearData(self):
+        self.data["Channel"]  = " - "
+        self.data["Station"]  = " - "
+        self.data["Strength"] = self.Get("RSSI")
+        self.data["Stereo"]   = self.Get("ST")
+        self.data["stationName"] = [""]*8
+        self.data["rdsText"]     = [""]*64
+
+        self.newData.send(self.data)
+    ## --------------------------------------------------------------
+    ## Description : Mute/Unmute
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 27-08-2021 12:08:18
+    ## --------------------------------------------------------------
+    def Mute(self, state):
+        self.Set("DMUTE",1-state)
+        self.Write()
