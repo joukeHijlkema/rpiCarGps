@@ -22,3 +22,8 @@
 .mediumText {
     font: 20px Sans;
 }
+
+levelbar.continuous block.filled{
+    color: red;
+}
+

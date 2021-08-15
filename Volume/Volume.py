@@ -20,7 +20,8 @@ class myVolume(threading.Thread):
     def __init__(self):
         super(myVolume, self).__init__()
 
-        self.fromVolume = signal("fromVolume")
+        self.fromVolume     = signal("fromVolume")
+        self.fromVolumeInfo = signal("fromVolumeInfo")
         GPIO.setmode(GPIO.BOARD)
 
         self.Doit = True
@@ -82,15 +83,15 @@ if __name__ == '__main__':
     def pulseData(data):
         with pulsectl.Pulse('volume-increaser') as pulse:
             sink   = pulse.sink_list()[1]
-            volume = sink.volume
-            if "UP" in data:
+            volume = pulse.volume_get_all_chans(sink)
+            if "UP" in data and volume < 1.2:
                 pulse.volume_change_all_chans(sink, 0.05)
-            elif "DOWN" in data:
+            elif "DOWN" in data and volume > 0.0:
                 pulse.volume_change_all_chans(sink, -0.05)
             elif "MUTE" in data:
                 V = not sink.mute
                 pulse.mute(sink,V)
-            print(sink)
+    
     # signal("fromVolume").connect(alsaData)
     signal("fromVolume").connect(pulseData)
 

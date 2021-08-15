@@ -13,11 +13,16 @@ from gi.repository import Gtk, GObject, Gdk, GdkPixbuf, Gio, GLib
 
 import sys
 sys.path.append("../GPS")
+import os
 from GPS.gtkNavit import gtkNavit
+
+sys.path.append("../Terminal")
+from Terminal import Terminal
 
 import dbus
 import configparser
 from blinker import signal
+import pulsectl
 
 import svgutils.transform as sg
 from lxml import etree
@@ -63,7 +68,7 @@ class mainWindow(Gtk.Window):
             window.set_default_size(W,H)
             window.set_size_request(W,H)
         navCont  = self.builder.get_object("navitContainer")
-        myNavit  = gtkNavit(None,W2,H-50)
+        myNavit  = gtkNavit(None,W2,H-65)
         navCont.add(myNavit)
 
         ## Counters
@@ -105,11 +110,18 @@ class mainWindow(Gtk.Window):
         self.actionSignal = signal("Actions")
 
         # MPD stuff
-        self.toMpd = signal("toMPD")
+        self.toMpd   = signal("toMPD")
         self.fromMpd = signal("fromMPD")
         self.fromMpd.connect(self.gotMpdData)
 
+        # Volume stuff
+        GLib.timeout_add(200, self.checkVolumeData)
+        
         self.updateLevelSvg()
+
+        # Terminal stuff
+        self.term = Terminal.Terminal()
+        self.builder.get_object("termTab").pack_start(self.term,True,True,0)
         
         window.show_all()
         myNavit.start()
@@ -175,6 +187,21 @@ class mainWindow(Gtk.Window):
         GLib.idle_add(self.builder.get_object("mpdTitle").set_text,data["title"])
         GLib.idle_add(self.builder.get_object("mpdArtist").set_text,data["artist"])
         GLib.idle_add(self.builder.get_object("mpdAlbum").set_text,data["album"])
+    ## --------------------------------------------------------------
+    ## Description : treat volume signals
+    ## NOTE : 
+    ## -
+    ## Author : jouke hylkema
+    ## date   : 10-01-2021 18:01:42
+    ## --------------------------------------------------------------
+    def checkVolumeData(self):
+        with pulsectl.Pulse('volume-increaser') as pulse:
+            # print(pulse.sink_list())
+            sink   = pulse.sink_list()[1]
+            volume = pulse.volume_get_all_chans(sink)
+            # print(100*volume)
+            GLib.idle_add(self.builder.get_object("volumeLevel").set_value,100*volume)
+        return True
         
     ## --------------------------------------------------------------
     ## Description : treat Level data
@@ -256,6 +283,13 @@ class mainWindow(Gtk.Window):
             self.toMpd.send("next")
         elif "mpdPrev" in args.get_name():
             self.toMpd.send("previous")
+        elif "actionsScreen" in args.get_name():
+            os.system("xset -display :0 s blank")
+            os.system("xset -display :0 s reset")
+            os.system("xset -display :0 s activate")
+        elif "shutdownButton" in args.get_name():
+            self.actionSignal.send("save")
+            os.system("sudo poweroff")
         
 
     ## --------------------------------------------------------------

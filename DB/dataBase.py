@@ -1,4 +1,4 @@
-2#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 #  =================================================
@@ -290,3 +290,8 @@ class dataBase(threading.Thread):
         self.Exec("UPDATE Memory SET Value=0 WHERE Id=4")
         self.dstTank = self.GetOne("SELECT Value FROM Memory WHERE Id=4")
         
+if __name__ == '__main__':
+
+    db = dataBase("Jouke","!Jouke","localhost","busGps")
+    db.start()
+    

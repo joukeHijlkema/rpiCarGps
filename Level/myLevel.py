@@ -77,8 +77,8 @@ class myLevel(threading.Thread):
         X = 0
         Y = 0
         for i in range(N):
-            X+=IMU.readACCx()
-            Y+=IMU.readACCy()
+            X+=IMU.readACCy()
+            Y+=IMU.readACCx()
         return [(X/N)-self.zeroX,(Y/N)-self.zeroY]
 
     ## --------------------------------------------------------------

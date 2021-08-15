@@ -25,7 +25,7 @@ SYSTEM "navit.dtd">
   <!-- timestamps 0/1 - prefix log messages with a timestamp -->
   <debug name="timestamps" level="0"/>
 
-  <navit center="4808 N 1134 E" zoom="256" tracking="1" orientation="0" recent_dest="250" autozoom_active="0" radius="0" >
+  <navit center="4808 N 1134 E" zoom="256" tracking="1" orientation="-1" recent_dest="250" autozoom_active="0" radius="0" >
     <graphics type="gtk_drawing_area"/>
     <gui type="internal" enabled="yes">
       <![CDATA[

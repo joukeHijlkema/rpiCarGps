@@ -235,6 +235,9 @@ def Actions (args):
             config["Radio"]["preset_%s"%args.split()[1]] = "%s"%radio.getFreq()
         elif "radioRestore" in args and radio is not None:
             radio.setFrequency(config.getfloat("Radio","preset_%s"%args.split()[1]))
+    if "save" in args:
+        with open("/home/pi/rpiCarGps/rpiCarGps.cfg", 'w') as configfile:
+            config.write(configfile)
 
 ## --------------------------------------------------------------
 ## Description : got MPD data

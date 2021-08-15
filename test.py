@@ -7,6 +7,12 @@
 #   - Initial Version 1.0
 #  =================================================
 
-from Radio.myRadio import myRadio as Radio
+from blinker import signal
 
-radio = Radio(87.9,0x10,1)
+def Info(data):
+    print(data)
+    
+signal("fromVolumeInfo").connect(Info)
+signal("fromVolume").connect(Info)
+
+signal("fromVolumeInfo").send({"Level":3})
