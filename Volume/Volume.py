@@ -84,7 +84,7 @@ if __name__ == '__main__':
         with pulsectl.Pulse('volume-increaser') as pulse:
             sink   = pulse.sink_list()[1]
             volume = pulse.volume_get_all_chans(sink)
-            if "UP" in data and volume < 1.2:
+            if "UP" in data and volume < 1.5:
                 pulse.volume_change_all_chans(sink, 0.05)
             elif "DOWN" in data and volume > 0.0:
                 pulse.volume_change_all_chans(sink, -0.05)

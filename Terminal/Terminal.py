@@ -12,7 +12,7 @@ from gi.repository import Gtk, GObject, Gdk, GdkPixbuf, Gio, GLib, Vte
 
 import os
 
-class Terminal(Gtk.HBox):
+class Terminal(Gtk.Box):
     def __init__ (self):
         super(Terminal, self).__init__()
         self.terminal_box = Gtk.HBox()
