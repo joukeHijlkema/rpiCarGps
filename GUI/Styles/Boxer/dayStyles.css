@@ -11,11 +11,15 @@
 #Units {
     color: #000000;
 }
-
+#musicPanelPlay, #musicPanelNext  {
+    background-image: none;
+    background-color: #000000;
+}
+    
 #speedMeter #Value{
     color:#FF4500;
 }
-    
+
 .bigText {
     font: 25px Sans;
 }

@@ -238,6 +238,10 @@ def Actions (args):
     if "save" in args:
         with open("/home/pi/rpiCarGps/rpiCarGps.cfg", 'w') as configfile:
             config.write(configfile)
+    if "goodSpot" in args:
+        with open("/home/pi/rpiCarGps/GPS/goodSpots.txt", 'a') as goodspotFile:
+            goodspotFile.write('mg:%s %s type=poi_customX label="good spot"\n'%
+                               (data["GPS"]["lon"],data["GPS"]["lat"]))
 
 ## --------------------------------------------------------------
 ## Description : got MPD data

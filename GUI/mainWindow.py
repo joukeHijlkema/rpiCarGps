@@ -84,7 +84,8 @@ class mainWindow(Gtk.Window):
                 name          = i,
                 arguments     = ",".join(args)
             ))
-            butCont.add(self.items[i])
+            ##butCont.add(self.items[i])
+            butCont.pack_start(self.items[i],True,True,0)
 
         self.setStyle("/home/pi/rpiCarGps/GUI/Styles/%s/dayStyles.css"%self.config.get("Items","Config"))
         
@@ -183,10 +184,20 @@ class mainWindow(Gtk.Window):
     ## date   : 13-06-2021 12:06:14
     ## --------------------------------------------------------------
     def gotMpdData(self, data):
-        # print("MPD: received %s"%data)
-        GLib.idle_add(self.builder.get_object("mpdTitle").set_text,data["title"])
-        GLib.idle_add(self.builder.get_object("mpdArtist").set_text,data["artist"])
-        GLib.idle_add(self.builder.get_object("mpdAlbum").set_text,data["album"])
+        print("MPD: received %s"%data)
+        if "play" in data["action"]:
+            GLib.idle_add(self.builder.get_object("mpdTitle").set_text,data["title"])
+            GLib.idle_add(self.builder.get_object("mpdArtist").set_text,data["artist"])
+            GLib.idle_add(self.builder.get_object("mpdAlbum").set_text,data["album"])
+        if "update" in data["action"] and "title" in data:
+            GLib.idle_add(self.builder.get_object("mpdTitle").set_text,data["title"])
+            GLib.idle_add(self.builder.get_object("mpdArtist").set_text,data["artist"])
+            GLib.idle_add(self.builder.get_object("mpdAlbum").set_text,data["album"])
+            
+            GLib.idle_add(self.items["musicPanel"].song.set_label,data["title"])
+            GLib.idle_add(self.items["musicPanel"].artist.set_label,data["artist"])
+            
+            
     ## --------------------------------------------------------------
     ## Description : treat volume signals
     ## NOTE : 
@@ -259,6 +270,7 @@ class mainWindow(Gtk.Window):
     ## --------------------------------------------------------------
     def Action (self,args,args2=None):
         print("mainwindow Action: %s"%args.get_name())
+
         if "seekUp" in args.get_name():
             self.toRadio.send("seekUp")
             # self.clearRadioData()
@@ -290,10 +302,12 @@ class mainWindow(Gtk.Window):
         elif "shutdownButton" in args.get_name():
             self.actionSignal.send("save")
             os.system("sudo poweroff")
+        elif "goodSpotButton" in args.get_name():
+            self.actionSignal.send("goodSpot")
         
 
     ## --------------------------------------------------------------
-    ## Description : empty radion data
+    ## Description : empty radio data
     ## NOTE : 
     ## -
     ## Author : jouke hylkema

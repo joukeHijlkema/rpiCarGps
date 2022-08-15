@@ -346,6 +346,7 @@ SYSTEM "navit.dtd">
     <!-- Mapset template for openstreetmaps -->
     <mapset enabled="yes">
         <maps type="binfile" enabled="yes" data="/Maps/*"/>
+        <maps type="textfile" enabled="yes" data="/home/pi/rpiCarGps/GPS/goodSpots.txt"/>
         <!-- <map type="binfile" enabled="yes" data="/Maps/Bousquet.bin"/> -->
     </mapset>
 
@@ -2057,7 +2058,7 @@ SYSTEM "navit.dtd">
 	<itemgra item_types="vehicle_pedestrian" order="0-">
 	  <icon src="gui_vehicle_pedestrian_16_16.png" />
 	</itemgra>
-	<itemgra item_types="poi_custom0,poi_custom1,poi_custom2,poi_custom3,poi_custom4,poi_custom5,poi_custom6,poi_custom7,poi_custom8,poi_custom9,poi_customa,poi_customb,poi_customc,poi_customd,poi_custome,poi_customf" order="10-">
+	<itemgra item_types="poi_custom0,poi_custom1,poi_custom2,poi_custom3,poi_custom4,poi_custom5,poi_custom6,poi_custom7,poi_custom8,poi_custom9,poi_customa,poi_customb,poi_customc,poi_customd,poi_custome,poi_customf" order="0-">
 	  <icon src="%s" />
 	</itemgra>
       </layer>

@@ -73,11 +73,11 @@ for d in data:
         lat=d[1]
         lon=d[2]
 
-fid = open("{}_nights.kml".format(args.title),"w")
+fid = open("./Trips/{}_nights.kml".format(args.title),"w")
 fid.write(rootNights.to_string(prettyprint=True))
 fid.close()
 
-fid = open("{}_route.kml".format(args.title),"w")
+fid = open("./Trips/{}_route.kml".format(args.title),"w")
 fid.write(rootRoute.to_string(prettyprint=True))
 fid.close()
 

@@ -14,3 +14,7 @@
     color:#FFFCFC;
 }
 
+#musicPanelPlay,#musicPanelPNext  {
+    background-image: none;
+    background-color: #FFFCFC;
+}

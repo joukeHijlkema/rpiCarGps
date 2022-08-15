@@ -7,12 +7,13 @@
 #   - Initial Version 1.0
 #  =================================================
 
-from blinker import signal
-
-def Info(data):
-    print(data)
+args = "truc_1"
+match args:
+    case "truc":
+        print("OK")
+    case "machin":
+        print("NOK")
+    case _:
+        print("Default")
+        
     
-signal("fromVolumeInfo").connect(Info)
-signal("fromVolume").connect(Info)
-
-signal("fromVolumeInfo").send({"Level":3})

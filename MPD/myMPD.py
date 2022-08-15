@@ -48,7 +48,11 @@ class myMPD(threading.Thread):
         while self.doIt:
             
             sleep(1)
-            
+            what = {"action":"update"}
+            song = self.client.currentsong()
+            out = {**what, **song}
+            self.fromMusic.send(out)
+
 
         self.client.stop()
         sleep(1)

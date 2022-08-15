@@ -1,0 +1,3 @@
+mg:1.192065 43.16867 type=poi_custom0 label="good spot" icon_src="camping.svg"
+mg:1.63275 46.67586 type=poi_custom0 label="good spot" icon_src="camping.svg"
+

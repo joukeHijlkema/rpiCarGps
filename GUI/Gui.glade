@@ -694,11 +694,13 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton">
-                    <property name="label" translatable="yes">button</property>
+                  <object class="GtkButton" id="goodSpotButton">
+                    <property name="label" translatable="yes">Save spot</property>
+                    <property name="name">goodSpotButton</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
+                    <signal name="clicked" handler="Action" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">1</property>
