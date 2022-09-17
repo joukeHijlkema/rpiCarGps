@@ -39,5 +39,33 @@
        x2 = "900"
        y2 = "265"
        id="Xindicator" />
+    <line
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       x1="450"
+       y1="210"
+       x2="450"
+       y2="215"
+       id="Yindicator" />
+    <line
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       x1="450"
+       y1="315"
+       x2="450"
+       y2="320"
+       id="Yindicator" />
+    <line
+       style="fill:none;fill-rule:evenodd;stroke:#0000ff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       x1 = "390"
+       y1 = "265"
+       x2 = "400"
+       y2 = "265"
+       id="Xindicator" />
+    <line
+       style="fill:none;fill-rule:evenodd;stroke:#0000ff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       x1 = "500"
+       y1 = "265"
+       x2 = "510"
+       y2 = "265"
+       id="Xindicator" />
   </g>
 </svg>

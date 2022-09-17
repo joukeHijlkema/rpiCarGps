@@ -184,7 +184,7 @@ class mainWindow(Gtk.Window):
     ## date   : 13-06-2021 12:06:14
     ## --------------------------------------------------------------
     def gotMpdData(self, data):
-        print("MPD: received %s"%data)
+        #print("MPD: received %s"%data)
         if "play" in data["action"]:
             GLib.idle_add(self.builder.get_object("mpdTitle").set_text,data["title"])
             GLib.idle_add(self.builder.get_object("mpdArtist").set_text,data["artist"])
@@ -223,12 +223,12 @@ class mainWindow(Gtk.Window):
     ## --------------------------------------------------------------
     def gotLevelData(self, data):
 
-        print("Level")
+        #print("Level")
         S = pow(10,float(self.config["Level"]["zoom"]))
         X = round(S*0.0631*data["X"]+265)
         Y = round(S*0.1071*data["Y"]+450)
-        print(data)
-        print("X:%s, Y:%s"%(X,Y))
+        #print(data)
+        #print("X:%s, Y:%s"%(X,Y))
         self.levelXi.set("y1","%s"%X)
         self.levelXi.set("y2","%s"%X)
         
@@ -269,7 +269,7 @@ class mainWindow(Gtk.Window):
     ## date   : 26-06-2019 14:06:35
     ## --------------------------------------------------------------
     def Action (self,args,args2=None):
-        print("mainwindow Action: %s"%args.get_name())
+        #print("mainwindow Action: %s"%args.get_name())
 
         if "seekUp" in args.get_name():
             self.toRadio.send("seekUp")
@@ -289,7 +289,7 @@ class mainWindow(Gtk.Window):
             else:
                 self.actionSignal.send("radioRestore %s"%id)
         elif "mpdPlay" in args.get_name():
-            print("MPD play")
+            #print("MPD play")
             self.toMpd.send("play")
         elif "mpdSkip" in args.get_name():
             self.toMpd.send("next")
@@ -358,16 +358,16 @@ class mainWindow(Gtk.Window):
         iter    = iface.attr_iter()
         path    = object.get_attr_wi("navit",iter)
         navit   = bus.get_object('org.navit_project.navit', path[1])
-        print(navit)
+        #print(navit)
         iface.attr_iter_destroy(iter)
         
         if self.mode=="Day":
-            print("switch to night")
+            #print("switch to night")
             navit.set_layout("Car-dark")
             self.setStyle("GUI/Styles/%s/nightStyles.css"%self.config.get("Items","Config"))
             self.mode  = "Night"
         else:
-            print("switch to day")
+            #print("switch to day")
             navit.set_layout("Car")
             self.setStyle("GUI/Styles/%s/dayStyles.css"%self.config.get("Items","Config"))
             self.mode  = "Day"

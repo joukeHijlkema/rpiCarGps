@@ -221,8 +221,8 @@ def dayHist(offset):
 ## --------------------------------------------------------------
 def Actions (args):
     global radio, config
-    print("Actions: %s"%args)
-    print("radioOn = %s"%radioOn)
+    #print("Actions: %s"%args)
+    #print("radioOn = %s"%radioOn)
     if radioOn:
         if "radioOnOff" in args:
             if radio is not None:
@@ -240,9 +240,9 @@ def Actions (args):
             config.write(configfile)
     if "goodSpot" in args:
         with open("/home/pi/rpiCarGps/GPS/goodSpots.txt", 'a') as goodspotFile:
-            goodspotFile.write('mg:%s %s type=poi_customX label="good spot"\n'%
+            goodspotFile.write('mg:%s %s type=poi_custom0 label="good spot" icon_src="camping.png"\n'%
                                (data["GPS"]["lon"],data["GPS"]["lat"]))
-
+            goodspotFile.close()
 ## --------------------------------------------------------------
 ## Description : got MPD data
 ## NOTE : 
@@ -251,7 +251,8 @@ def Actions (args):
 ## date   : 27-15-2021 15:15:26
 ## --------------------------------------------------------------
 def gotMpdData(args):
-    print("received from MPD: %s"%args)
+    #print("received from MPD: %s"%args)
+    pass
             
 ## =========================================================
 ## MAIN
