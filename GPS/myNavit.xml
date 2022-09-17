@@ -347,6 +347,7 @@ SYSTEM "navit.dtd">
     <mapset enabled="yes">
         <maps type="binfile" enabled="yes" data="/Maps/*"/>
         <maps type="textfile" enabled="yes" data="/home/pi/rpiCarGps/GPS/goodSpots.txt"/>
+        <maps type="textfile" enabled="yes" data="/home/pi/rpiCarGps/GPS/spots.txt"/>
         <!-- <map type="binfile" enabled="yes" data="/Maps/Bousquet.bin"/> -->
     </mapset>
 
